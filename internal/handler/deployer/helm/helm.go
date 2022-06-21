@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"log"
 	"os"
-	bd "sail/internal/handler/deployer"
 	"time"
 
-	// "go.uber.org/zap"
-	gutils "github.com/Laisky/go-utils"
+	"go.uber.org/zap"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/cli"
+
+	cm "sail/common"
+	"sail/global"
+	bd "sail/internal/handler/deployer"
 )
 
 type HelmCfg struct {
@@ -35,7 +37,6 @@ func (h *HelmCfg) SetSetting(ns string) {
 func (h *HelmCfg) SetCfg(ns string) {
 	h.cfg = new(action.Configuration)
 	if err := h.cfg.Init(h.settings.RESTClientGetter(), ns, os.Getenv("HELM_DRIVER"), log.Printf); err != nil {
-		gutils.Logger.Fatal(err)
 		log.Printf("%+v", err)
 		os.Exit(1)
 	}
@@ -49,42 +50,34 @@ func (h *HelmCfg) SetUninstallClient() {
 	h.UninstallCli = action.NewUninstall(h.cfg)
 }
 
-func (dh *DeployerByHelm) Install(ctx context.Context, b images.BuildInfo) error {
+func (dh *DeployerByHelm) Install(ctx context.Context, b cm.Message) error {
 	ctxTimeOut, cancel := context.WithTimeout(ctx, 120*time.Second)
 
+	commonArgs := []string{b.GetName(), b.GetChart()}
 	defer cancel()
-
-	commonArgs := []string{b.GetName(), b.GetComposePath()}
-	installArgs := map[string]interface{}{
-		"image.repository": fmt.Sprintf("%s/%s/%s", b.GetRepository(), b.GetProject(), b.GetName()),
-		"image.tag":        b.GetImageTags()[0],
-	}
-
-	release, err := customhelm.RunInstall(ctxTimeOut, commonArgs, dh.InstallCli, installArgs, dh.settings.Namespace(), os.Stdout)
+	release, err := RunInstall(ctxTimeOut, commonArgs, dh.settings, dh.InstallCli)
 	if err != nil {
-		fmt.Println(err)
-		panic("install failed")
+		global.Logger.Error("app install failed", zap.String("app", release.Name), zap.Error(err))
 	}
-	fmt.Println(release.Name, "install successful")
+	global.Logger.Info("app install successful", zap.String("app", release.Name))
 	return nil
 
 }
 
-func (dh *DeployerByHelm) Uninstall(b images.BuildInfo) error {
-	err := customhelm.RunUninstall(b.GetName(), dh.UninstallCli, os.Stdout)
+func (dh *DeployerByHelm) Uninstall(b cm.Message) error {
+	err := RunUninstall(b.GetName(), dh.UninstallCli)
 	if err != nil {
-		panic("uninstall failed")
+		global.Logger.Error("app uninstall occur error", zap.Error(err))
 	}
 	fmt.Println(b.GetName(), "uninstall successful")
 	return nil
-
 }
 
 func (dh *DeployerByHelm) Run(ctx context.Context) {
 	var (
-		ok        bool
-		buildInfo images.BuildInfo
-		err       error
+		ok      bool
+		Message cm.Message
+		err     error
 	)
 
 DEPLOY_LOOP:
@@ -92,21 +85,21 @@ DEPLOY_LOOP:
 		select {
 		case <-ctx.Done():
 			break DEPLOY_LOOP
-		case buildInfo, ok = <-dh.inChan:
+		case Message, ok = <-dh.InChan:
 			if !ok {
 				break DEPLOY_LOOP
 			}
 		}
 		// main logic
 		// TODO：需要解耦
-		err = dh.Uninstall(buildInfo)
+		err = dh.Uninstall(Message)
 		if err != nil {
 			panic(err)
 		}
-		err = dh.Install(ctx, buildInfo)
+		err = dh.Install(ctx, Message)
 		if err != nil {
 			panic(err)
 		}
-		dh.outChan <- buildInfo
+		dh.OutChan <- Message
 	}
 }

@@ -16,14 +16,14 @@ type DeployersItf interface {
 }
 
 type BaseDeployer struct {
-	inChan  <-chan cm.Message
-	outChan chan<- cm.Message
+	InChan  <-chan cm.Message
+	OutChan chan<- cm.Message
 }
 
 func (b *BaseDeployer) SetInChan(inchan <-chan cm.Message) {
-	b.inChan = inchan
+	b.InChan = inchan
 }
 
 func (b *BaseDeployer) SetOutChan(outchan chan<- cm.Message) {
-	b.outChan = outchan
+	b.OutChan = outchan
 }
