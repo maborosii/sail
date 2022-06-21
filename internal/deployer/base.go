@@ -1,4 +1,4 @@
-package deployers
+package deployer
 
 import (
 	"context"
@@ -16,14 +16,14 @@ type DeployersItf interface {
 }
 
 type BaseDeployer struct {
-	InChan  <-chan cm.Message
-	OutChan chan<- cm.Message
+	inChan  <-chan cm.Message
+	outChan chan<- cm.Message
 }
 
 func (b *BaseDeployer) SetInChan(inchan <-chan cm.Message) {
-	b.InChan = inchan
+	b.inChan = inchan
 }
 
 func (b *BaseDeployer) SetOutChan(outchan chan<- cm.Message) {
-	b.OutChan = outchan
+	b.outChan = outchan
 }
