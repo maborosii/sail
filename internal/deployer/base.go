@@ -6,24 +6,24 @@ import (
 )
 
 type DeployersItf interface {
-	SetInChan(inchan <-chan cm.Message)
-	SetOutChan(outchan chan<- cm.Message)
+	SetInChan(inchan <-chan cm.IMessage)
+	SetOutChan(outchan chan<- cm.IMessage)
 
-	Install(context.Context, cm.Message) error
-	Uninstall(cm.Message) error
+	Install(context.Context, cm.IMessage) error
+	Uninstall(cm.IMessage) error
 
 	Run(context.Context)
 }
 
 type BaseDeployer struct {
-	inChan  <-chan cm.Message
-	outChan chan<- cm.Message
+	inChan  <-chan cm.IMessage
+	outChan chan<- cm.IMessage
 }
 
-func (b *BaseDeployer) SetInChan(inchan <-chan cm.Message) {
+func (b *BaseDeployer) SetInChan(inchan <-chan cm.IMessage) {
 	b.inChan = inchan
 }
 
-func (b *BaseDeployer) SetOutChan(outchan chan<- cm.Message) {
+func (b *BaseDeployer) SetOutChan(outchan chan<- cm.IMessage) {
 	b.outChan = outchan
 }

@@ -3,13 +3,10 @@ package common
 /*
 decorate message
 */
-type Message struct {
-}
+type IMessage interface {
+	GetName() string
+	GetResource() string
 
-func (m *Message) GetName() string {
-	return ""
-}
-
-func (m *Message) GetChart() string {
-	return ""
+	Tag() string
+	ConvertStatus() error
 }

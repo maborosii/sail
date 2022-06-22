@@ -12,21 +12,16 @@ import (
 
 // InitLogger 初始化Logger
 func InitLogger(cfg *setting.LogConf) (err error) {
-	// 写入日志文件配置
 	writeSyncer := getLogWriter(cfg.LogFile, cfg.MaxSize, cfg.MaxBackups, cfg.MaxAge)
-	// 日志格式
 	encoder := getEncoder()
-	// 日志等级
 	var l = new(zapcore.Level)
 	err = l.UnmarshalText([]byte(cfg.Level))
 	if err != nil {
 		return err
 	}
-	// 定义zapcore, 同时写入标准输出和日志文件
 	multiSyncer := zapcore.NewMultiWriteSyncer(writeSyncer, zapcore.AddSync(os.Stdout))
 	core := zapcore.NewCore(encoder, multiSyncer, l)
 
-	// 初始化
 	global.Logger = zap.New(core, zap.AddCaller())
 	return nil
 }

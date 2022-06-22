@@ -53,10 +53,10 @@ func (h *HelmCfg) SetUninstallClient() {
 	h.UninstallCli = action.NewUninstall(h.cfg)
 }
 
-func (dh *DeployerByHelm) Install(ctx context.Context, b cm.Message) error {
+func (dh *DeployerByHelm) Install(ctx context.Context, b cm.IMessage) error {
 	ctxTimeOut, cancel := context.WithTimeout(ctx, 120*time.Second)
 
-	commonArgs := []string{b.GetName(), b.GetChart()}
+	commonArgs := []string{b.GetName(), b.GetResource()}
 	defer cancel()
 	release, err := RunInstall(ctxTimeOut, commonArgs, dh.settings, dh.InstallCli)
 	if err != nil {
@@ -67,7 +67,7 @@ func (dh *DeployerByHelm) Install(ctx context.Context, b cm.Message) error {
 
 }
 
-func (dh *DeployerByHelm) Uninstall(b cm.Message) error {
+func (dh *DeployerByHelm) Uninstall(b cm.IMessage) error {
 	err := RunUninstall(b.GetName(), dh.UninstallCli)
 	if err != nil {
 		global.Logger.Error("app uninstall occur error", zap.Error(err))
@@ -79,7 +79,7 @@ func (dh *DeployerByHelm) Uninstall(b cm.Message) error {
 func (dh *DeployerByHelm) Run(ctx context.Context) {
 	var (
 		ok      bool
-		Message cm.Message
+		Message cm.IMessage
 		err     error
 	)
 
@@ -110,7 +110,8 @@ DEPLOY_LOOP:
 func RunInstall(ctx context.Context, args []string, settings *cli.EnvSettings, client *action.Install) (*release.Release, error) {
 	global.Logger.Debug("Original chart version: ", zap.String("version", client.Version))
 	if client.Version == "" && client.Devel {
-		debug("setting version to >0.0.0-0")
+		global.Logger.Debug("setting version to >0.0.0-0")
+		// debug("setting version to >0.0.0-0")
 		client.Version = ">0.0.0-0"
 	}
 
@@ -143,7 +144,8 @@ func RunInstall(ctx context.Context, args []string, settings *cli.EnvSettings, c
 	}
 
 	if chartRequested.Metadata.Deprecated {
-		warning("This chart is deprecated")
+		global.Logger.Warn("setting version to >0.0.0-0")
+		// warning("This chart is deprecated")
 	}
 
 	client.Namespace = settings.Namespace()
@@ -168,17 +170,17 @@ func RunUninstall(app string, client *action.Uninstall) error {
 	return nil
 }
 
-func debug(format string, v ...interface{}) {
-	if true {
-		format = fmt.Sprintf("[debug] %s\n", format)
-		log.Output(2, fmt.Sprintf(format, v...))
-	}
-}
+// func debug(format string, v ...interface{}) {
+// 	if true {
+// 		format = fmt.Sprintf("[debug] %s\n", format)
+// 		log.Output(2, fmt.Sprintf(format, v...))
+// 	}
+// }
 
-func warning(format string, v ...interface{}) {
-	format = fmt.Sprintf("WARNING: %s\n", format)
-	fmt.Fprintf(os.Stderr, format, v...)
-}
+// func warning(format string, v ...interface{}) {
+// 	format = fmt.Sprintf("WARNING: %s\n", format)
+// 	fmt.Fprintf(os.Stderr, format, v...)
+// }
 func checkIfInstallable(ch *chart.Chart) error {
 	switch ch.Metadata.Type {
 	case "", "application":
