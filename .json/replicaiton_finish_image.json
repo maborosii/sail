@@ -1,0 +1,32 @@
+{
+    "type": "REPLICATION",
+    "occur_at": 1655961989,
+    "operator": "event_based",
+    "event_data": {
+        "replication": {
+            "harbor_hostname": "harbor.domain.com",
+            "job_status": "Success",
+            "artifact_type": "artifact",
+            "authentication_type": "basic",
+            "override_mode": true,
+            "trigger_type": "event_based",
+            "execution_timestamp": 1655961986,
+            "src_resource": {
+                "registry_type": "harbor",
+                "endpoint": "http://harbor.domain.com:5002",
+                "namespace": "app"
+            },
+            "dest_resource": {
+                "registry_name": "dg.harbor.com",
+                "registry_type": "harbor",
+                "endpoint": "http://dg.harbor.com:89",
+                "namespace": "app"
+            },
+            "successful_artifact": [{
+                "type": "artifact",
+                "status": "Succeed",
+                "name_tag": "ale-external-service [1 item(s) in total]"
+            }]
+        }
+    }
+}

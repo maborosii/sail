@@ -2,7 +2,6 @@ package deployer
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -54,10 +53,22 @@ func (h *HelmCfg) SetUninstallClient() {
 }
 
 func (dh *DeployerByHelm) Install(ctx context.Context, b cm.IMessage) error {
-	ctxTimeOut, cancel := context.WithTimeout(ctx, 120*time.Second)
+	name, err := b.GetName()
+	if err != nil {
+		global.Logger.Error("get app name occur error, info:", zap.Error(err))
+		return err
+	}
 
-	commonArgs := []string{b.GetName(), b.GetResource()}
+	chart, err := b.GetResource()
+	if err != nil {
+		global.Logger.Error("get chart name occur error, info:", zap.Error(err))
+		return err
+	}
+	commonArgs := []string{name, chart}
+
+	ctxTimeOut, cancel := context.WithTimeout(ctx, 120*time.Second)
 	defer cancel()
+
 	release, err := RunInstall(ctxTimeOut, commonArgs, dh.settings, dh.InstallCli)
 	if err != nil {
 		global.Logger.Error("app install failed", zap.String("app", release.Name), zap.Error(err))
@@ -68,11 +79,16 @@ func (dh *DeployerByHelm) Install(ctx context.Context, b cm.IMessage) error {
 }
 
 func (dh *DeployerByHelm) Uninstall(b cm.IMessage) error {
-	err := RunUninstall(b.GetName(), dh.UninstallCli)
+	name, err := b.GetName()
+	if err != nil {
+		global.Logger.Error("get app name occur error, info:", zap.Error(err))
+		return err
+	}
+	err = RunUninstall(name, dh.UninstallCli)
 	if err != nil {
 		global.Logger.Error("app uninstall occur error", zap.Error(err))
 	}
-	fmt.Println(b.GetName(), "uninstall successful")
+	global.Logger.Info("app uninstall successful", zap.String("app", name))
 	return nil
 }
 

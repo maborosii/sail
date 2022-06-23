@@ -4,9 +4,10 @@ package common
 decorate message
 */
 type IMessage interface {
-	GetName() string
-	GetResource() string
+	GetName() (string, error)
+	GetResource() (string, error)
+	GetStatus() (MessageStatus, error)
 
-	Tag() string
-	ConvertStatus() error
+	InitStatus()
+	ConvertStatus(MessageStatus) error
 }
