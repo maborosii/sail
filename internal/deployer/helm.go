@@ -131,7 +131,7 @@ func RunInstall(ctx context.Context, args []string, settings *cli.EnvSettings, c
 		client.Version = ">0.0.0-0"
 	}
 
-	// 解析args中的name和路径
+	// 解析args中的app name和chart name
 	name, chart, err := client.NameAndChart(args)
 	if err != nil {
 		return nil, err
