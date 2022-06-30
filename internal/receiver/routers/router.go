@@ -19,5 +19,10 @@ func NewRouter() *gin.Engine {
 		apiv1.POST("/harbor/upload/chart", harb.NotifyChartUpload)
 	}
 
+	argocd := v1.NewArgoCD()
+	{
+		apiv1.POST("/argocd/notify", argocd.NotifySyncStatus)
+	}
+
 	return r
 }
