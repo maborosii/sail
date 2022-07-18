@@ -9,4 +9,4 @@ func NewArgoCD() ArgoCD {
 
 }
 
-func (a ArgoCD) NotifySyncStatus(c *gin.Context) {}
+func (a ArgoCD) NotifyArgocdSyncStatus(c *gin.Context) {}

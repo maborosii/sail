@@ -11,17 +11,17 @@ func NewRouter() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
-	harb := v1.NewHarbor()
+	harbor := v1.NewHarbor()
 	apiv1 := r.Group("/api/v1")
 	{
-		apiv1.POST("/harbor/replciation/image", harb.NotifyImageReplication)
-		apiv1.POST("/harbor/replciation/chart", harb.NotifyChartReplicaiton)
-		apiv1.POST("/harbor/upload/chart", harb.NotifyChartUpload)
+		apiv1.POST("/harbor/replication/image", harbor.NotifyHarborImageReplication)
+		apiv1.POST("/harbor/replication/chart", harbor.NotifyHarborChartReplication)
+		apiv1.POST("/harbor/upload/chart", harbor.NotifyHarborChartUpload)
 	}
 
 	argocd := v1.NewArgoCD()
 	{
-		apiv1.POST("/argocd/notify", argocd.NotifySyncStatus)
+		apiv1.POST("/argocd/notify", argocd.NotifyArgocdSyncStatus)
 	}
 
 	return r

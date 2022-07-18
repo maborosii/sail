@@ -22,25 +22,9 @@ func NewHarbor() Harbor {
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/harbor/replication/image [post]
-func (h Harbor) NotifyImageReplication(c *gin.Context) {}
-
-// @Summary harbor chart复制处理 -- from 源harbor的replication的webhook
-// @Produce  json
-// @Success 200 {object} string "成功"
-// @Failure 400 {object} errcode.Error "请求错误"
-// @Failure 500 {object} errcode.Error "内部错误"
-// @Router /api/v1/harbor/replication/chart [post]
-func (h Harbor) NotifyChartReplicaiton(c *gin.Context) {}
-
-// @Summary harbor chart上传处理 -- from 当前harbor的upload_chart的webhook
-// @Produce  json
-// @Success 200 {object} string "成功"
-// @Failure 400 {object} errcode.Error "请求错误"
-// @Failure 500 {object} errcode.Error "内部错误"
-// @Router /api/v1/harbor/upload/chart [post]
-func (h Harbor) NotifyChartUpload(c *gin.Context) {
+func (h Harbor) NotifyHarborImageReplication(c *gin.Context) {
 	var err error
-	req := service.UploadRequest{}
+	req := service.HarborReplicationRequest{}
 	response := resp.NewResponse(c)
 
 	err = c.ShouldBindJSON(&req)
@@ -51,26 +35,75 @@ func (h Harbor) NotifyChartUpload(c *gin.Context) {
 		return
 	}
 
-	// request validate
-	msgType, err := req.MsgType()
-	if err != nil {
-		global.Logger.Error("upload request's type is not support",
-			zap.Error(err),
-			zap.String("request type", req.Type))
-		response.ToErrorResponse(errcode.RequestTypeNotSupport)
+	srv := service.NewService(c.Request.Context())
+	if err = srv.HarborReplicationImage(&req); err != nil {
+		global.Logger.Error("error occured")
 		return
 	}
-	if msgType != service.UPLOAD_CHART {
-		global.Logger.Error("upload request's type is not adaption",
-			zap.Error(errcode.RequestTypeNotAdapt),
-			zap.String("request type", req.Type))
-		response.ToErrorResponse(errcode.RequestTypeNotAdapt)
+
+	global.Logger.Info("request handle successful")
+	response.ToResponse(gin.H{})
+
+}
+
+// @Summary harbor chart复制处理 -- from 源harbor的replication的webhook
+// @Produce  json
+// @Success 200 {object} string "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/harbor/replication/chart [post]
+func (h Harbor) NotifyHarborChartReplication(c *gin.Context) {
+	var err error
+	req := service.HarborReplicationRequest{}
+	response := resp.NewResponse(c)
+
+	err = c.ShouldBindJSON(&req)
+	if err != nil {
+		global.Logger.Error("request cannot map to struct",
+			zap.Error(errcode.BadRequest))
+		response.ToErrorResponse(errcode.BadRequest)
+		return
+	}
+	srv := service.NewService(c.Request.Context())
+	if err = srv.HarborReplicationChart(&req); err != nil {
+		global.Logger.Error("error occured")
+		return
+	}
+
+	global.Logger.Info("request handle successful")
+	response.ToResponse(gin.H{})
+
+}
+
+// @Summary harbor chart上传处理 -- from 当前harbor的upload_chart的webhook
+// @Produce  json
+// @Success 200 {object} string "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/harbor/upload/chart [post]
+func (h Harbor) NotifyHarborChartUpload(c *gin.Context) {
+	var err error
+	req := service.HarborUploadRequest{}
+	response := resp.NewResponse(c)
+
+	err = c.ShouldBindJSON(&req)
+	if err != nil {
+		global.Logger.Error("request cannot map to struct",
+			zap.Error(errcode.BadRequest))
+		response.ToErrorResponse(errcode.BadRequest)
 		return
 	}
 
 	// main logic
 	srv := service.NewService(c.Request.Context())
-	srv.UploadChart(&req)
+	if err = srv.HarborUploadChart(&req); err != nil {
+		global.Logger.Error("error occured")
+		return
+	}
+
+	// timeout
+	// _, cancel := context.WithTimeout(c, 10*time.Second)
+	// defer cancel()
 
 	global.Logger.Info("request handle successful")
 	response.ToResponse(gin.H{})

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"sail/global"
 	"sail/pkg/errcode"
 
@@ -10,26 +9,11 @@ import (
 
 type harborMessageType string
 
-type Service struct {
-	ctx context.Context
-}
-
-func NewService(ctx context.Context) *Service {
-	return &Service{
-		ctx: ctx,
-	}
-}
-
 /*
    request model
 */
-type CommonRequest struct {
-	Type     string `json:"type"`
-	OccurAt  int    `json:"occur_at"`
-	Operator string `json:"operator"`
-}
-
-func (c *CommonRequest) MsgType() (harborMessageType, error) {
+// harbor request define
+func (c *CommonRequest) HarborMsgType() (harborMessageType, error) {
 	switch c.Type {
 	case string(REPLICATION):
 		return REPLICATION, nil
@@ -40,11 +24,11 @@ func (c *CommonRequest) MsgType() (harborMessageType, error) {
 	}
 }
 
-type UploadRequest struct {
+type HarborUploadRequest struct {
 	*CommonRequest
 	EventData UploadEventData `json:"event_data"`
 }
-type ReplicationRequest struct {
+type HarborReplicationRequest struct {
 	*CommonRequest
 	EventData ReplicationEventData `json:"event_data"`
 }
@@ -100,11 +84,13 @@ type SuccessfulArtifact struct {
 	NameTag string `json:"name_tag"`
 }
 
+// argocd message define
+
 /*
 	service
 */
-func (s *Service) UploadChart(req *UploadRequest) error {
-	msgType, err := req.MsgType()
+func (s *Service) HarborUploadChart(req *HarborUploadRequest) error {
+	msgType, err := req.HarborMsgType()
 	if err != nil {
 		global.Logger.Error("upload request's type is not support",
 			zap.Error(err),
@@ -124,5 +110,6 @@ func (s *Service) UploadChart(req *UploadRequest) error {
 
 }
 
-func (s *Service) ReplicationChart(req *ReplicationRequest) {}
-func (s *Service) ReplicationImage(req *ReplicationRequest) {}
+func (s *Service) HarborReplicationChart(req *HarborReplicationRequest) error { return nil }
+func (s *Service) HarborReplicationImage(req *HarborReplicationRequest) error { return nil }
+func (s *Service) ArgocdNotify(req *HarborReplicationRequest) error           { return nil }
