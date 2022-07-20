@@ -112,4 +112,3 @@ func (s *Service) HarborUploadChart(req *HarborUploadRequest) error {
 
 func (s *Service) HarborReplicationChart(req *HarborReplicationRequest) error { return nil }
 func (s *Service) HarborReplicationImage(req *HarborReplicationRequest) error { return nil }
-func (s *Service) ArgocdNotify(req *HarborReplicationRequest) error           { return nil }

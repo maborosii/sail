@@ -35,15 +35,21 @@ func (h Harbor) NotifyHarborImageReplication(c *gin.Context) {
 		return
 	}
 
+	global.Logger.Debug("request info",
+		zap.String("type", req.Type),
+		zap.String("artifact_type", req.EventData.Replication.ArtifactType),
+		zap.String("dest_resource", req.EventData.Replication.DestResource.RegistryName),
+		zap.String("tags", req.EventData.Replication.SuccessfulArtifact[0].NameTag))
+
 	srv := service.NewService(c.Request.Context())
 	if err = srv.HarborReplicationImage(&req); err != nil {
 		global.Logger.Error("error occured")
+		response.ToErrorResponse(err.(*errcode.Error))
 		return
 	}
 
-	global.Logger.Info("request handle successful")
+	global.Logger.Info("request for NotifyHarborImageReplication handle successful")
 	response.ToResponse(gin.H{})
-
 }
 
 // @Summary harbor chart复制处理 -- from 源harbor的replication的webhook
@@ -64,15 +70,22 @@ func (h Harbor) NotifyHarborChartReplication(c *gin.Context) {
 		response.ToErrorResponse(errcode.BadRequest)
 		return
 	}
+
+	global.Logger.Debug("request info",
+		zap.String("type", req.Type),
+		zap.String("artifact_type", req.EventData.Replication.ArtifactType),
+		zap.String("dest_resource", req.EventData.Replication.DestResource.RegistryName),
+		zap.String("tags", req.EventData.Replication.SuccessfulArtifact[0].NameTag))
+
 	srv := service.NewService(c.Request.Context())
 	if err = srv.HarborReplicationChart(&req); err != nil {
 		global.Logger.Error("error occured")
+		response.ToErrorResponse(err.(*errcode.Error))
 		return
 	}
 
-	global.Logger.Info("request handle successful")
+	global.Logger.Info("request for NotifyHarborChartReplication handle successful")
 	response.ToResponse(gin.H{})
-
 }
 
 // @Summary harbor chart上传处理 -- from 当前harbor的upload_chart的webhook
@@ -93,11 +106,16 @@ func (h Harbor) NotifyHarborChartUpload(c *gin.Context) {
 		response.ToErrorResponse(errcode.BadRequest)
 		return
 	}
+	global.Logger.Debug("request info",
+		zap.String("type", req.Type),
+		zap.String("app", req.EventData.Repository.Name),
+		zap.String("dest_project", req.EventData.Repository.Namespace))
 
 	// main logic
 	srv := service.NewService(c.Request.Context())
 	if err = srv.HarborUploadChart(&req); err != nil {
 		global.Logger.Error("error occured")
+		response.ToErrorResponse(err.(*errcode.Error))
 		return
 	}
 
@@ -105,6 +123,6 @@ func (h Harbor) NotifyHarborChartUpload(c *gin.Context) {
 	// _, cancel := context.WithTimeout(c, 10*time.Second)
 	// defer cancel()
 
-	global.Logger.Info("request handle successful")
+	global.Logger.Info("request for NotifyHarborChartUpload handle successful")
 	response.ToResponse(gin.H{})
 }
