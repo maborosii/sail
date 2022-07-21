@@ -43,7 +43,7 @@ func (h Harbor) NotifyHarborImageReplication(c *gin.Context) {
 
 	srv := service.NewService(c.Request.Context())
 	if err = srv.HarborReplicationImage(&req); err != nil {
-		global.Logger.Error("error occured")
+		global.Logger.Error("error occured", zap.Error(err))
 		response.ToErrorResponse(err.(*errcode.Error))
 		return
 	}
@@ -79,7 +79,7 @@ func (h Harbor) NotifyHarborChartReplication(c *gin.Context) {
 
 	srv := service.NewService(c.Request.Context())
 	if err = srv.HarborReplicationChart(&req); err != nil {
-		global.Logger.Error("error occured")
+		global.Logger.Error("error occured", zap.Error(err))
 		response.ToErrorResponse(err.(*errcode.Error))
 		return
 	}
@@ -114,7 +114,7 @@ func (h Harbor) NotifyHarborChartUpload(c *gin.Context) {
 	// main logic
 	srv := service.NewService(c.Request.Context())
 	if err = srv.HarborUploadChart(&req); err != nil {
-		global.Logger.Error("error occured")
+		global.Logger.Error("error occured", zap.Error(err))
 		response.ToErrorResponse(err.(*errcode.Error))
 		return
 	}
