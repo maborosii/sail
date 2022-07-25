@@ -117,7 +117,7 @@ func (pusher *DingTalkPusher) PushText(text string) error {
 	return pusher.Push(NewDingTalkMessage(MSG_TYPE_TEXT).SetText(text))
 }
 
-// dingtalk api鉴权
+// dingtalk 加签
 func toSign(secret string) (sign string, timestamp string) {
 	if secret == "" {
 		return "", ""
