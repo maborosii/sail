@@ -1,4 +1,4 @@
-package sender
+package dingtalk
 
 type PushBody interface {
 	String()

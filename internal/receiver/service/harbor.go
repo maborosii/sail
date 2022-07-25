@@ -1,8 +1,10 @@
 package service
 
 import (
+	"fmt"
 	"sail/global"
 	"sail/pkg/errcode"
+	q "sail/pkg/queue"
 
 	"go.uber.org/zap"
 )
@@ -84,8 +86,6 @@ type SuccessfulArtifact struct {
 	NameTag string `json:"name_tag"`
 }
 
-// argocd message define
-
 /*
 	service
 */
@@ -103,11 +103,12 @@ func (s *Service) HarborUploadChart(req *HarborUploadRequest) error {
 			zap.String("request type", req.Type))
 		return errcode.RequestTypeNotSupport
 	}
-	// TODO
-	// 1. 将请求内容简化，并添加状态值
-	// 2. 将简化后的内容传送给deployer
-	return nil
 
+	j := q.NewJob(func() error { return nil })
+	global.FlowControl.CommitJob(j)
+	fmt.Println("commit job to job queue success")
+	j.WaitDone()
+	return nil
 }
 
 func (s *Service) HarborReplicationChart(req *HarborReplicationRequest) error { return nil }

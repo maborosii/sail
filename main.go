@@ -8,10 +8,14 @@ package main
 import (
 	"fmt"
 	"net/http"
+	q "sail/pkg/queue"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 func main() {
-	flowControl := NewFlowControl()
+	flowControl := q.NewFlowControl()
 	myHandler := MyHandler{
 		flowControl: flowControl,
 	}
@@ -21,16 +25,18 @@ func main() {
 }
 
 type MyHandler struct {
-	flowControl *FlowControl
+	flowControl *q.FlowControl
 }
 
 func (h *MyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("recieve http request")
-	job := &Job{
+	job := &q.Job{
+		UUID:     uuid.NewString(),
 		DoneChan: make(chan struct{}, 1),
-		handleJob: func(job *Job) error {
+		HandleJob: func() error {
 			w.Header().Set("Content-Type", "application/json")
 			w.Write([]byte("Hello World"))
+			time.Sleep(5 * time.Second)
 			return nil
 		},
 	}

@@ -8,4 +8,5 @@ var (
 	RequestSourceNotSupport = NewError(1003, "not support message source")
 	RequestTypeNotAdapt     = NewError(1004, "not adaptable message type")
 	BadRequest              = NewError(1005, "bad request")
+	RequestExpired          = NewError(1006, "message is expired")
 )

@@ -2,15 +2,15 @@
 package global
 
 import (
-	"time"
+	q "sail/pkg/queue"
 
 	"go.uber.org/zap"
 )
 
 var (
-	// MonitorSetting *setting.MonitorConfig
-	Logger     *zap.Logger
-	ConfigPath string
-	RateLimit  time.Duration
-	BucketSize int
+	Logger      *zap.Logger
+	ConfigPath  string
+	RateLimit   int // seconds
+	BucketSize  int
+	FlowControl *q.FlowControl
 )

@@ -54,10 +54,12 @@ func (e *Error) StatusCode() int {
 		return http.StatusOK
 	case ServerError.Code():
 		return http.StatusInternalServerError
-	case RequestTypeNotSupport.Code(), RequestTypeNotAdapt.Code():
+	case RequestTypeNotSupport.Code(), RequestTypeNotAdapt.Code(), RequestSourceNotSupport.Code(), RequestExpired.Code():
 		return http.StatusRequestedRangeNotSatisfiable
 	case BadRequest.Code():
 		return http.StatusBadRequest
+	case NotFound.Code():
+		return http.StatusNotFound
 	}
 
 	return http.StatusInternalServerError

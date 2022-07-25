@@ -4,17 +4,30 @@ import (
 	"container/list"
 	"fmt"
 	"sync"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 type Job struct {
+	UUID      string
 	DoneChan  chan struct{}
-	handleJob func(j *Job) error //具体的处理逻辑
+	HandleJob func() error //具体的处理逻辑
+}
+
+func NewJob(HandleJob func() error) *Job {
+	return &Job{
+		UUID:      uuid.NewString(),
+		DoneChan:  make(chan struct{}, 1),
+		HandleJob: HandleJob,
+	}
 }
 
 // 消费者从队列中取出该job时 执行具体的处理逻辑
 func (job *Job) Execute() error {
-	fmt.Println("job start to execute ")
-	return job.handleJob(job)
+	fmt.Println(time.Now())
+	fmt.Println(job.UUID, "job start to execute ")
+	return job.HandleJob()
 }
 
 // 执行完Execute后，调用该函数以通知主线程中等待的job
@@ -67,6 +80,7 @@ func (q *JobQueue) PopJob() *Job {
 		return nil
 	}
 
+	fmt.Println(q.size)
 	q.size--
 	return q.queue.Remove(q.queue.Front()).(*Job)
 }
@@ -102,6 +116,7 @@ func (m *WorkerManager) createWorker() error {
 		for range m.jobQueue.waitJob() {
 			currentJob = m.jobQueue.PopJob()
 			if err := currentJob.Execute(); err != nil {
+				currentJob.Done()
 				continue
 			}
 			currentJob.Done()
@@ -116,7 +131,7 @@ type FlowControl struct {
 }
 
 func NewFlowControl() *FlowControl {
-	jobQueue := NewJobQueue(10)
+	jobQueue := NewJobQueue(1)
 	fmt.Println("init job queue success")
 
 	m := NewWorkerManager(jobQueue)
