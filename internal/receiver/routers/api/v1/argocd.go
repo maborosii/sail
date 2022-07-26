@@ -40,7 +40,7 @@ func (a ArgoCD) NotifyArgocdSyncStatus(c *gin.Context) {
 
 	global.Logger.Debug("request info",
 		zap.String("type", req.Type),
-		zap.String("appName", req.EventData.Name),
+		zap.String("appName", req.EventData.AppName),
 		zap.String("sync_status", req.EventData.SyncStatus),
 		zap.String("health_status", req.EventData.HealthStatus))
 

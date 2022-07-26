@@ -3,6 +3,7 @@ package global
 
 import (
 	q "sail/pkg/queue"
+	"sail/pkg/setting"
 
 	"go.uber.org/zap"
 )
@@ -10,7 +11,11 @@ import (
 var (
 	Logger      *zap.Logger
 	ConfigPath  string
-	RateLimit   int // seconds
 	BucketSize  int
 	FlowControl *q.FlowControl
+
+	TemplateHarborReplicationImage *setting.DingTalkMessageFromCustom
+	TemplateHarborReplicationChart *setting.DingTalkMessageFromCustom
+	TemplateHarborUploadChart      *setting.DingTalkMessageFromCustom
+	TemplateArgocdSync             *setting.DingTalkMessageFromCustom
 )

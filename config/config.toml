@@ -1,4 +1,0 @@
-[reveiver]
-port = 8080
-[sender]
-address = "http://www.test.com"

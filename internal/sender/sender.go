@@ -1,9 +1,9 @@
 package sender
 
-type PushBody interface {
+type Message interface {
 	String()
 }
 
 type Pusher interface {
-	Push(p PushBody) error
+	Push(m *Message) error
 }
