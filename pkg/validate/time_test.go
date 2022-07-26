@@ -35,7 +35,7 @@ func TestIsExpired(t *testing.T) {
 		}, {
 			name: "test case for in time range",
 			args: args{
-				sample:   1658743435,
+				sample:   int(time.Now().Unix()),
 				duration: 5 * time.Minute,
 			},
 			want:    true,

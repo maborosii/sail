@@ -14,7 +14,7 @@ func IsExpired(sample int, duration time.Duration) (bool, error) {
 
 	now := int(time.Now().Unix())
 	if (sample < (now - int(duration.Seconds()))) || (sample > (now + int(duration.Seconds()))) {
-		return false, fmt.Errorf("sample timestamp is expired")
+		return false, fmt.Errorf("this timestamp is expired")
 	}
 
 	return true, nil

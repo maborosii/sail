@@ -6,6 +6,7 @@ type ArgocdNotifyRequest struct {
 }
 
 type ArgocdEventData struct {
+	Source       string `json:"source"`
 	Name         string `json:"name"`
 	SyncStatus   string `json:"sync_status"`
 	HealthStatus string `json:"health_status"`

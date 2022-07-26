@@ -2,6 +2,7 @@
     "type": "argocd",
     "operator": "default",
     "event_data": {
+        "source": "清远",
         "name": "ale-case-service",
         "sync_status": "Succeed",
         "health_status": "Healthy"

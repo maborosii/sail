@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+// dingtalk 消息推送器
 type DingTalkPusher struct {
 	access_token string
 	secret       string
@@ -26,7 +27,9 @@ func NewDingTalkPusher(access_token string, secret string) *DingTalkPusher {
 	}
 }
 
+// 对 url 加签并拼接
 func (p *DingTalkPusher) completeUrl(mainDomain string) (*url.URL, error) {
+	fmt.Println("p.secret:", p.secret)
 	sign, timestamp := toSign(p.secret)
 
 	u, err := url.Parse(mainDomain)
@@ -43,7 +46,8 @@ func (p *DingTalkPusher) completeUrl(mainDomain string) (*url.URL, error) {
 	return u, nil
 }
 
-func (p *DingTalkPusher) Push(m DingTalkMessage) error {
+// 消息推送
+func (p *DingTalkPusher) Push(m *DingTalkMessage) error {
 	if p.Client == nil {
 		p.Client = http.DefaultClient
 	}
@@ -54,7 +58,7 @@ func (p *DingTalkPusher) Push(m DingTalkMessage) error {
 	}
 
 	buf := bytes.NewBuffer(nil)
-	err = json.NewEncoder(buf).Encode(&m)
+	err = json.NewEncoder(buf).Encode(m)
 	if err != nil {
 		return err
 	}
@@ -73,13 +77,7 @@ func (p *DingTalkPusher) Push(m DingTalkMessage) error {
 	return nil
 }
 
-type DingTalkPushMessageType string
-
-const (
-	MSG_TYPE_TEXT     DingTalkPushMessageType = "text"
-	MSG_TYPE_MARKDOWN DingTalkPushMessageType = "markdown"
-)
-
+// dingtalk 推送返回消息体
 type dingTalkError struct {
 	code    int    `json:"errcode"`
 	message string `json:"errmsg"`
@@ -89,33 +87,63 @@ func (d *dingTalkError) Error() string {
 	return fmt.Sprintf("DingTalk API error code:%d msg:%q", d.code, d.message)
 }
 
+// 定义 dingtalk post 消息体
+type DingTalkPostMessageType string
+
+const (
+	MSG_TYPE_TEXT     DingTalkPostMessageType = "text"
+	MSG_TYPE_MARKDOWN DingTalkPostMessageType = "markdown"
+)
+
 type DingTalkMessage struct {
-	Type DingTalkPushMessageType `json:"msgtype"`
+	Type DingTalkPostMessageType `json:"msgtype"`
 	Text struct {
 		Content string `json:"content"`
 	} `json:"text,omitempty"`
-	Markdown struct {
+	MarkDown struct {
 		Title string `json:"title"`
 		Text  string `json:"text"`
 	} `json:"markdown,omitempty"`
 }
 
-func NewDingTalkMessage(msgtype DingTalkPushMessageType) *DingTalkMessage {
-	m := &DingTalkMessage{Type: msgtype}
+// option mode for init dingtalk post message body
+type OptionOfDingTalkMessage func(*DingTalkMessage)
+
+func WithDingTalkMessageType(t DingTalkPostMessageType) OptionOfDingTalkMessage {
+	return func(d *DingTalkMessage) {
+		d.Type = t
+	}
+}
+func WithDingTalkMessageContentOfText(tt struct {
+	Content string `json:"content"`
+}) OptionOfDingTalkMessage {
+	return func(d *DingTalkMessage) {
+		d.Text = tt
+	}
+}
+func WithDingTalkMessageContentOfMarkDown(tm struct {
+	Title string `json:"title"`
+	Text  string `json:"text"`
+}) OptionOfDingTalkMessage {
+	return func(d *DingTalkMessage) {
+		d.MarkDown = tm
+	}
+}
+
+func NewDingTalkMessage(opts ...OptionOfDingTalkMessage) *DingTalkMessage {
+	m := &DingTalkMessage{}
+	for _, op := range opts {
+		op(m)
+	}
 	return m
 }
-func (m DingTalkMessage) String() {
 
+func (m *DingTalkMessage) String() {
 }
 
-func (m DingTalkMessage) SetText(content string) DingTalkMessage {
-	m.Text.Content = content
-	return m
-}
-
-func (pusher *DingTalkPusher) PushText(text string) error {
-	return pusher.Push(NewDingTalkMessage(MSG_TYPE_TEXT).SetText(text))
-}
+// func (pusher *DingTalkPusher) PushText(text string) error {
+// return pusher.Push(NewDingTalkMessage(MSG_TYPE_TEXT).SetText(text))
+// }
 
 // dingtalk 加签
 func toSign(secret string) (sign string, timestamp string) {
