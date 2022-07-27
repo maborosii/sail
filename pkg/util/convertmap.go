@@ -30,7 +30,7 @@ func SpreadToMap(in interface{}, tagName string) (map[string]interface{}, error)
 	// 存放待解析结构体
 	queue := make([]interface{}, 0)
 	offset := 0
-	fmt.Println(offset)
+	// fmt.Println(offset)
 	queue = append(queue, in)
 
 	// QUEUE_LOOP:
@@ -45,13 +45,15 @@ func SpreadToMap(in interface{}, tagName string) (map[string]interface{}, error)
 		// FIELD_LOOP:
 		for i := 0; i < v.NumField(); i++ {
 			element := v.Field(i)
-			fmt.Printf("%+v\n", element)
+			// fmt.Printf("%+v\n", element)
 			switch element.Kind() {
 			case reflect.Ptr:
 				// 结构体指针属性
 				el := element.Elem()
 				if el.Kind() == reflect.Struct {
-					queue = append(queue, el)
+					//! notice
+					// 反射第二定律:将反射类型对象转换为接口类型变量
+					queue = append(queue, el.Interface())
 				} else {
 					ti := t.Field(i)
 					if tagValue := ti.Tag.Get(tagName); tagValue != "" {
