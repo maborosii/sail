@@ -13,7 +13,7 @@ type DingTalkConfig struct {
 	Secret      string `mapstructure:"secret"`
 	Domain      string `mapstructure:"domain"`
 }
-type DingTalkMessageFromCustom struct {
+type DingTalkMessageTemplate struct {
 	MsgType string `mapstructure:"type"`
 	Title   string `mapstructure:"title"`
 	Content string `mapstructure:"content"`

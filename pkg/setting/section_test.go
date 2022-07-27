@@ -32,7 +32,7 @@ func TestSetting_ReadConfig(t *testing.T) {
 					fmt.Printf("%+v\n", d)
 				}
 			}
-			dc := &DingTalkMessageFromCustom{}
+			dc := &DingTalkMessageTemplate{}
 			for _, j := range args.Template {
 				// parse template config
 				mapstructure.Decode(j, dc)

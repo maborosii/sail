@@ -16,7 +16,6 @@ type ArgoCD struct{}
 
 func NewArgoCD() ArgoCD {
 	return ArgoCD{}
-
 }
 
 func (a ArgoCD) NotifyArgocdSyncStatus(c *gin.Context) {

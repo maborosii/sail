@@ -14,8 +14,8 @@ var (
 	BucketSize  int
 	FlowControl *q.FlowControl
 
-	TemplateHarborReplicationImage *setting.DingTalkMessageFromCustom
-	TemplateHarborReplicationChart *setting.DingTalkMessageFromCustom
-	TemplateHarborUploadChart      *setting.DingTalkMessageFromCustom
-	TemplateArgocdSync             *setting.DingTalkMessageFromCustom
+	TemplateHarborReplicationImage *setting.DingTalkMessageTemplate
+	TemplateHarborReplicationChart *setting.DingTalkMessageTemplate
+	TemplateHarborUploadChart      *setting.DingTalkMessageTemplate
+	TemplateArgocdSync             *setting.DingTalkMessageTemplate
 )
