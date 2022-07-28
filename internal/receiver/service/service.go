@@ -13,9 +13,9 @@ func NewService(ctx context.Context) *Service {
 }
 
 type CommonRequest struct {
-	Type     string `json:"type" mapstructure:"type"`
+	Type     string `json:"type" mapstructure:"req_type"`
 	OccurAt  int    `json:"occur_at" mapstructure:"occur_at"`
-	Operator string `json:"operator" mapstructure:"operator"`
+	Operator string `json:"operator" mapstructure:""`
 }
 
 type NotifyRequest interface {

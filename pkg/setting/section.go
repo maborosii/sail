@@ -18,6 +18,11 @@ type DingTalkMessageTemplate struct {
 	Title   string `mapstructure:"title"`
 	Content string `mapstructure:"content"`
 }
+
+func (dtt *DingTalkMessageTemplate) GetSentence() []string {
+	return []string{dtt.Title, dtt.Content}
+}
+
 type Receiver struct {
 	Port int `toml:"port"`
 }

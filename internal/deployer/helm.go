@@ -52,7 +52,7 @@ func (h *HelmCfg) SetUninstallClient() {
 	h.UninstallCli = action.NewUninstall(h.cfg)
 }
 
-func (dh *DeployerByHelm) Install(ctx context.Context, b cm.IMessage) error {
+func (dh *DeployerByHelm) Install(ctx context.Context, b cm.InMessage) error {
 	name, err := b.GetName()
 	if err != nil {
 		global.Logger.Error("get app name occur error, info:", zap.Error(err))
@@ -78,7 +78,7 @@ func (dh *DeployerByHelm) Install(ctx context.Context, b cm.IMessage) error {
 
 }
 
-func (dh *DeployerByHelm) Uninstall(b cm.IMessage) error {
+func (dh *DeployerByHelm) Uninstall(b cm.InMessage) error {
 	name, err := b.GetName()
 	if err != nil {
 		global.Logger.Error("get app name occur error, info:", zap.Error(err))
@@ -95,7 +95,7 @@ func (dh *DeployerByHelm) Uninstall(b cm.IMessage) error {
 func (dh *DeployerByHelm) Run(ctx context.Context) {
 	var (
 		ok      bool
-		Message cm.IMessage
+		Message cm.InMessage
 		err     error
 	)
 

@@ -33,10 +33,10 @@ func TestArgocdNotifyRequest_Spread(t *testing.T) {
 				},
 			},
 			args: args{
-				tagType: "json",
-				keys:    []string{"source", "app_name"},
+				tagType: "mapstructure",
+				keys:    []string{"city", "app_name"},
 			},
-			want:    map[string]interface{}{"source": "dg", "app_name": "test_app"},
+			want:    map[string]interface{}{"city": "dg", "app_name": "test_app"},
 			wantErr: false,
 		},
 	}

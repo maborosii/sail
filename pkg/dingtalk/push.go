@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	cm "sail/common"
 	"time"
 )
 
@@ -47,7 +48,11 @@ func (p *DingTalkPusher) completeUrl(mainDomain string) (*url.URL, error) {
 }
 
 // 消息推送
-func (p *DingTalkPusher) Push(m *DingTalkMessage) error {
+func (p *DingTalkPusher) Push(m cm.OutMessage) error {
+	// func (p *DingTalkPusher) Push(m *DingTalkMessage) error {
+
+	//asset
+	mm := m.(*DingTalkMessage)
 	if p.Client == nil {
 		p.Client = http.DefaultClient
 	}
@@ -58,7 +63,8 @@ func (p *DingTalkPusher) Push(m *DingTalkMessage) error {
 	}
 
 	buf := bytes.NewBuffer(nil)
-	err = json.NewEncoder(buf).Encode(m)
+	// fmt.Printf("%+v\n", mm)
+	err = json.NewEncoder(buf).Encode(mm)
 	if err != nil {
 		return err
 	}
@@ -138,7 +144,7 @@ func NewDingTalkMessage(opts ...OptionOfDingTalkMessage) *DingTalkMessage {
 	return m
 }
 
-func (m *DingTalkMessage) String() {
+func (m *DingTalkMessage) RealText() {
 }
 
 // func (pusher *DingTalkPusher) PushText(text string) error {

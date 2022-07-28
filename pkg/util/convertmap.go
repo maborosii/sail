@@ -5,23 +5,24 @@ import (
 	"reflect"
 )
 
-func validateStructForReflect(in interface{}) (*reflect.Value, error) {
+func validateStructForReflect(in interface{}) (interface{}, error) {
 	v := reflect.ValueOf(in)
 	if v.Kind() == reflect.Ptr {
 		v = v.Elem()
-		return &v, nil
 	}
 
 	if v.Kind() != reflect.Struct { // 非结构体返回错误提示
-		return nil, fmt.Errorf("ToMap only accepts struct or struct pointer; got %T", v)
+		return nil, fmt.Errorf("StructToMap only accepts struct or struct pointer; got %T", v)
 	}
-	return &v, nil
+	return v.Interface(), nil
 }
 
-// ToMap 结构体转为Map[string]interface{}
+// 结构体转为Map[string]interface{}
+// 将结构体属性拉平，即map的层级只有一层
+// 需要原结构的所有属性tagName是不同的
 func SpreadToMap(in interface{}, tagName string) (map[string]interface{}, error) {
 	out := make(map[string]interface{})
-	_, err := validateStructForReflect(in)
+	newIn, err := validateStructForReflect(in)
 	// 校验参数是否是结构体
 	if err != nil {
 		return nil, err
@@ -31,7 +32,7 @@ func SpreadToMap(in interface{}, tagName string) (map[string]interface{}, error)
 	queue := make([]interface{}, 0)
 	offset := 0
 	// fmt.Println(offset)
-	queue = append(queue, in)
+	queue = append(queue, newIn)
 
 	// QUEUE_LOOP:
 	for len(queue) != offset {

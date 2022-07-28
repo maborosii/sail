@@ -11,8 +11,8 @@ func TestStructToMap(t *testing.T) {
 			AA string `json:"aa"`
 			BB string `json:"bb"`
 		}
-		A string `json:"a"`
-		B string `json:"b"`
+		A string `json:""`
+		B string `json:""`
 	}{A: "1", B: "2", C: &struct {
 		AA string `json:"aa"`
 		BB string `json:"bb"`

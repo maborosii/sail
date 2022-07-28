@@ -28,62 +28,72 @@ func (c *CommonRequest) HarborMsgType() (harborMessageType, error) {
 
 type HarborUploadRequest struct {
 	*CommonRequest
-	EventData UploadEventData `json:"event_data"`
+	EventData UploadEventData `json:"event_data" mapstructure:""`
 }
 type HarborReplicationRequest struct {
 	*CommonRequest
-	EventData ReplicationEventData `json:"event_data"`
+	EventData ReplicationEventData `json:"event_data" mapstructure:""`
 }
 
 type UploadEventData struct {
-	Repository Repository `json:"repository,omitempty"`
-	Resources  Resources  `json:"resources,omitempty"`
+	Repository Repository `json:"repository,omitempty" mapstructure:""`
+	Resources  Resources  `json:"resources,omitempty" mapstructure:""`
 }
 
 type ReplicationEventData struct {
-	Replication Replication `json:"replication,omitempty"`
+	Replication Replication `json:"replication,omitempty" mapstructure:""`
 }
 type Repository struct {
-	Name         string `json:"name"`
-	Namespace    string `json:"namespace"`
-	RepoFullName string `json:"repo_full_name"`
-	RepoType     string `json:"repo_type"`
+	Name         string `json:"name" mapstructure:"app_name"`
+	Namespace    string `json:"namespace" mapstructure:"project"`
+	RepoFullName string `json:"repo_full_name" mapstructure:""`
+	RepoType     string `json:"repo_type" mapstructure:""`
 }
 type Resources struct {
-	Resources []Resource `json:"resources"`
+	Resources []Resource `json:"resources" mapstructure:""`
 }
 type Resource struct {
-	Tag         string `json:"tag"`
-	ResourceURL string `json:"resource_url"`
+	Tag         string `json:"tag" mapstructure:"chart_tag"`
+	ResourceURL string `json:"resource_url" mapstructure:"app_chart_url"`
 }
 
 type Replication struct {
-	HarborHostname     string               `json:"harbor_hostname"`
-	JobStatus          string               `json:"job_status"`
-	ArtifactType       string               `json:"artifact_type"`
-	AuthenticationType string               `json:"authentication_type"`
-	OverrideMode       bool                 `json:"override_mode"`
-	TriggerType        string               `json:"trigger_type"`
-	ExecutionTimestamp int                  `json:"execution_timestamp"`
-	SrcResource        SrcResource          `json:"src_resource"`
-	DestResource       DestResource         `json:"dest_resource"`
-	SuccessfulArtifact []SuccessfulArtifact `json:"successful_artifact"`
+	HarborHostname     string               `json:"harbor_hostname" mapstructure:""`
+	JobStatus          string               `json:"job_status" mapstructure:"job_status"`
+	ArtifactType       string               `json:"artifact_type" mapstructure:"resource_type"`
+	AuthenticationType string               `json:"authentication_type" mapstructure:""`
+	OverrideMode       bool                 `json:"override_mode" mapstructure:""`
+	TriggerType        string               `json:"trigger_type" mapstructure:""`
+	ExecutionTimestamp int                  `json:"execution_timestamp" mapstructure:""`
+	SrcResource        SrcResource          `json:"src_resource"  mapstructure:""`
+	DestResource       DestResource         `json:"dest_resource" mapstructure:"dest_resource"`
+	SuccessfulArtifact []SuccessfulArtifact `json:"successful_artifact"  mapstructure:"success_artifact"`
 }
 type SrcResource struct {
-	RegistryType string `json:"registry_type"`
-	Endpoint     string `json:"endpoint"`
-	Namespace    string `json:"namespace"`
+	RegistryType string `json:"registry_type"  mapstructure:""`
+	Endpoint     string `json:"endpoint"  mapstructure:""`
+	Namespace    string `json:"namespace" mapstructure:""`
 }
 type DestResource struct {
-	RegistryName string `json:"registry_name"`
-	RegistryType string `json:"registry_type"`
-	Endpoint     string `json:"endpoint"`
-	Namespace    string `json:"namespace"`
+	RegistryName string `json:"registry_name"  mapstructure:"dest_domain"`
+	RegistryType string `json:"registry_type" mapstructure:""`
+	Endpoint     string `json:"endpoint" mapstructure:""`
+	Namespace    string `json:"namespace" mapstructure:"namespace"`
 }
 type SuccessfulArtifact struct {
-	Type    string `json:"type"`
-	Status  string `json:"status"`
-	NameTag string `json:"name_tag"`
+	Type    string `json:"type"  mapstructure:"success_resource_type"`
+	Status  string `json:"status"  mapstructure:"success_job_status"`
+	NameTag string `json:"name_tag"  mapstructure:"success_name_tag"`
+}
+
+func (h *HarborUploadRequest) Spread(tagType string, keys ...string) (map[string]interface{}, error) {
+	// TODO:
+	return map[string]interface{}{}, nil
+}
+
+func (h *HarborReplicationRequest) Spread(tagType string, keys ...string) (map[string]interface{}, error) {
+	// TODO:
+	return map[string]interface{}{}, nil
 }
 
 /*

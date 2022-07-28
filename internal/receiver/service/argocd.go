@@ -9,14 +9,14 @@ import (
 
 type ArgocdNotifyRequest struct {
 	*CommonRequest
-	EventData ArgocdEventData `json:"event_data"`
+	EventData ArgocdEventData `json:"event_data" mapstructure:""`
 }
 
 type ArgocdEventData struct {
-	Source       string `json:"source"`
-	AppName      string `json:"app_name"`
-	SyncStatus   string `json:"sync_status"`
-	HealthStatus string `json:"health_status"`
+	Source       string `json:"source" mapstructure:"city"`
+	AppName      string `json:"app_name" mapstructure:"app_name"`
+	SyncStatus   string `json:"sync_status" mapstructure:"sync_status"`
+	HealthStatus string `json:"health_status" mapstructure:"health_status"`
 }
 
 func (a *ArgocdNotifyRequest) Spread(tagType string, keys ...string) (map[string]interface{}, error) {
