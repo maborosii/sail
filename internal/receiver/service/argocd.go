@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"sail/global"
 	"sail/pkg/util"
 
@@ -20,10 +19,9 @@ type ArgocdEventData struct {
 	HealthStatus string `json:"health_status"`
 }
 
-func (a *ArgocdNotifyRequest) Spread(keys ...string) (map[string]interface{}, error) {
+func (a *ArgocdNotifyRequest) Spread(tagType string, keys ...string) (map[string]interface{}, error) {
 	out := make(map[string]interface{})
-	fmt.Printf("%+v\n", a)
-	m, err := util.SpreadToMap(*a, "json")
+	m, err := util.SpreadToMap(a, tagType)
 	if err != nil {
 		global.Logger.Error("argocd notify request convert to map failed", zap.Error(err))
 		return nil, err

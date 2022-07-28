@@ -19,5 +19,5 @@ type CommonRequest struct {
 }
 
 type NotifyRequest interface {
-	Spread(keys ...string) map[string]interface{}
+	Spread(tagType string, keys ...string) (map[string]interface{}, error)
 }
