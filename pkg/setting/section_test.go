@@ -37,8 +37,12 @@ func TestSetting_ReadConfig(t *testing.T) {
 			dc := &dtt.DingTalkMessageTemplate{}
 			for _, j := range args.Template {
 				// parse template config
-				mapstructure.Decode(j, dc)
-				fmt.Printf("%+v\n", dc)
+				for _, jj := range j {
+					mapstructure.Decode(jj, dc)
+					fmt.Printf("%+v\n", dc)
+				}
+				// mapstructure.Decode(j, dc)
+				// fmt.Printf("%+v\n", dc)
 			}
 
 		})

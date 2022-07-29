@@ -1,11 +1,11 @@
 package setting
 
 type Config struct {
-	Senders   map[string]interface{} `toml:"sender" mapstructure:"sender"`
-	Receiver  Receiver               `toml:"receiver"`
-	Template  map[string]interface{} `toml:"template" mapstructure:"template"`
-	LogConfig *LogConf               `toml:"logconfig"`
-	JobQueue  JobQueueConfig         `toml:"job_queue"`
+	Senders   map[string]interface{}            `toml:"sender" mapstructure:"sender"`
+	Receiver  Receiver                          `toml:"receiver"`
+	Template  map[string]map[string]interface{} `toml:"template" mapstructure:"template"`
+	LogConfig *LogConf                          `toml:"logconfig"`
+	JobQueue  JobQueueConfig                    `toml:"job_queue"`
 }
 type Receiver struct {
 	Port int `toml:"port"`
