@@ -2,6 +2,7 @@ package v1
 
 import (
 	"sail/global"
+	"sail/internal/model"
 	"sail/internal/receiver/service"
 	"sail/pkg/errcode"
 	resp "sail/pkg/receiver"
@@ -24,7 +25,7 @@ func NewHarbor() Harbor {
 // @Router /api/v1/harbor/replication/image [post]
 func (h Harbor) NotifyHarborImageReplication(c *gin.Context) {
 	var err error
-	req := service.HarborReplicationRequest{}
+	req := model.HarborReplicationRequest{}
 	response := resp.NewResponse(c)
 
 	err = c.ShouldBindJSON(&req)
@@ -60,7 +61,7 @@ func (h Harbor) NotifyHarborImageReplication(c *gin.Context) {
 // @Router /api/v1/harbor/replication/chart [post]
 func (h Harbor) NotifyHarborChartReplication(c *gin.Context) {
 	var err error
-	req := service.HarborReplicationRequest{}
+	req := model.HarborReplicationRequest{}
 	response := resp.NewResponse(c)
 
 	err = c.ShouldBindJSON(&req)
@@ -96,7 +97,7 @@ func (h Harbor) NotifyHarborChartReplication(c *gin.Context) {
 // @Router /api/v1/harbor/upload/chart [post]
 func (h Harbor) NotifyHarborChartUpload(c *gin.Context) {
 	var err error
-	req := service.HarborUploadRequest{}
+	req := model.HarborUploadRequest{}
 	response := resp.NewResponse(c)
 
 	err = c.ShouldBindJSON(&req)

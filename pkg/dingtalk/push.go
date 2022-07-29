@@ -13,6 +13,13 @@ import (
 	"time"
 )
 
+type DingTalkConfig struct {
+	Delay       int    `mapstructure:"delay"`
+	AccessToken string `mapstructure:"access_token"`
+	Secret      string `mapstructure:"secret"`
+	Domain      string `mapstructure:"domain"`
+}
+
 // dingtalk 消息推送器
 type DingTalkPusher struct {
 	access_token string
@@ -146,10 +153,6 @@ func NewDingTalkMessage(opts ...OptionOfDingTalkMessage) *DingTalkMessage {
 
 func (m *DingTalkMessage) RealText() {
 }
-
-// func (pusher *DingTalkPusher) PushText(text string) error {
-// return pusher.Push(NewDingTalkMessage(MSG_TYPE_TEXT).SetText(text))
-// }
 
 // dingtalk 加签
 func toSign(secret string) (sign string, timestamp string) {

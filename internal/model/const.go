@@ -1,4 +1,4 @@
-package service
+package model
 
 const (
 	REPLICATION  harborMessageType = "REPLICATION"

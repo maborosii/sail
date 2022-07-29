@@ -2,6 +2,7 @@ package v1
 
 import (
 	"sail/global"
+	"sail/internal/model"
 	"sail/internal/receiver/service"
 	"sail/pkg/errcode"
 	resp "sail/pkg/receiver"
@@ -20,7 +21,7 @@ func NewArgoCD() ArgoCD {
 
 func (a ArgoCD) NotifyArgocdSyncStatus(c *gin.Context) {
 	var err error
-	req := service.ArgocdNotifyRequest{}
+	req := model.ArgocdNotifyRequest{}
 	response := resp.NewResponse(c)
 
 	err = c.ShouldBindJSON(&req)

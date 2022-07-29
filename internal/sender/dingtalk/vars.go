@@ -21,4 +21,5 @@ var harborReplicationCityList = map[string]string{
 	"mz.harbor.com": "梅州",
 	"jy.harbor.com": "揭阳",
 	"zj.harbor.com": "湛江",
-	"py.harbor.com": "番禺"}
+	"py.harbor.com": "番禺",
+}

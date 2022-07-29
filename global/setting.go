@@ -2,8 +2,8 @@
 package global
 
 import (
+	dtt "sail/pkg/dingtalk"
 	q "sail/pkg/queue"
-	"sail/pkg/setting"
 
 	"go.uber.org/zap"
 )
@@ -14,8 +14,8 @@ var (
 	BucketSize  int
 	FlowControl *q.FlowControl
 
-	TemplateHarborReplicationImage *setting.DingTalkMessageTemplate
-	TemplateHarborReplicationChart *setting.DingTalkMessageTemplate
-	TemplateHarborUploadChart      *setting.DingTalkMessageTemplate
-	TemplateArgocdSync             *setting.DingTalkMessageTemplate
+	TemplateHarborReplicationImage *dtt.DingTalkMessageTemplate
+	TemplateHarborReplicationChart *dtt.DingTalkMessageTemplate
+	TemplateHarborUploadChart      *dtt.DingTalkMessageTemplate
+	TemplateArgocdSync             *dtt.DingTalkMessageTemplate
 )

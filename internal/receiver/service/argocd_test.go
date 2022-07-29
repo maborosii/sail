@@ -3,13 +3,14 @@ package service
 import (
 	"fmt"
 	"reflect"
+	"sail/internal/model"
 	"testing"
 )
 
 func TestArgocdNotifyRequest_Spread(t *testing.T) {
 	type fields struct {
-		CommonRequest *CommonRequest
-		EventData     ArgocdEventData
+		CommonRequest *model.CommonRequest
+		EventData     model.ArgocdEventData
 	}
 	type args struct {
 		tagType string
@@ -25,10 +26,10 @@ func TestArgocdNotifyRequest_Spread(t *testing.T) {
 		{
 			name: "test",
 			fields: fields{
-				&CommonRequest{
+				&model.CommonRequest{
 					"1", 2, "3",
 				},
-				ArgocdEventData{
+				model.ArgocdEventData{
 					"dg", "test_app", "test", "test",
 				},
 			},
@@ -42,7 +43,7 @@ func TestArgocdNotifyRequest_Spread(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a := &ArgocdNotifyRequest{
+			a := &model.ArgocdNotifyRequest{
 				CommonRequest: tt.fields.CommonRequest,
 				EventData:     tt.fields.EventData,
 			}

@@ -7,22 +7,6 @@ type Config struct {
 	LogConfig *LogConf               `toml:"logconfig"`
 	JobQueue  JobQueueConfig         `toml:"job_queue"`
 }
-type DingTalkConfig struct {
-	Delay       int    `mapstructure:"delay"`
-	AccessToken string `mapstructure:"access_token"`
-	Secret      string `mapstructure:"secret"`
-	Domain      string `mapstructure:"domain"`
-}
-type DingTalkMessageTemplate struct {
-	MsgType string `mapstructure:"type"`
-	Title   string `mapstructure:"title"`
-	Content string `mapstructure:"content"`
-}
-
-func (dtt *DingTalkMessageTemplate) GetSentence() []string {
-	return []string{dtt.Title, dtt.Content}
-}
-
 type Receiver struct {
 	Port int `toml:"port"`
 }

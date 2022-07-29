@@ -2,18 +2,18 @@ package dingtalk
 
 import (
 	"os"
-	srv "sail/internal/receiver/service"
+	cm "sail/common"
+	"sail/internal/model"
 	"sail/internal/sender"
 	dt "sail/pkg/dingtalk"
-	setting "sail/pkg/setting"
 
 	"testing"
 )
 
 func TestRender(t *testing.T) {
 	type args struct {
-		n           srv.NotifyRequest
-		templateStr *setting.DingTalkMessageTemplate
+		n           cm.InputMessage
+		templateStr *dt.DingTalkMessageTemplate
 	}
 	tests := []struct {
 		name string
@@ -24,20 +24,20 @@ func TestRender(t *testing.T) {
 		{
 			name: "test",
 			args: args{
-				n: &srv.ArgocdNotifyRequest{
-					&srv.CommonRequest{
+				n: &model.ArgocdNotifyRequest{
+					&model.CommonRequest{
 						Type:     "argocd",
 						Operator: "default",
 						OccurAt:  1655959720,
 					},
-					srv.ArgocdEventData{
+					model.ArgocdEventData{
 						Source:       "清远",
 						AppName:      "ale-case-service",
 						SyncStatus:   "Succeed",
 						HealthStatus: "Healthy",
 					},
 				},
-				templateStr: &setting.DingTalkMessageTemplate{
+				templateStr: &dt.DingTalkMessageTemplate{
 					Title:   "ArgoCD 应用同步状态 -- {{ .City }}",
 					Content: "## ArgoCD 应用同步状态 -- {{ .City }}\n> - 名称: {{ .AppName }}\n> - 同步状态: {{ .SyncStatus }}\n> - 健康状态: {{ .HealthStatus }}\n> - 时间: {{ .OccurTime }}\n",
 				},

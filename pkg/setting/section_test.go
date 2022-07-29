@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	dtt "sail/pkg/dingtalk"
+
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -24,7 +26,7 @@ func TestSetting_ReadConfig(t *testing.T) {
 			if err := s.ReadConfig(args); (err != nil) != tt.wantErr {
 				t.Errorf("Setting.ReadConfig() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			d := &DingTalkConfig{}
+			d := &dtt.DingTalkConfig{}
 			for k, v := range args.Senders {
 				if k == "dingtalk" {
 					// parse dingtalk config
@@ -32,7 +34,7 @@ func TestSetting_ReadConfig(t *testing.T) {
 					fmt.Printf("%+v\n", d)
 				}
 			}
-			dc := &DingTalkMessageTemplate{}
+			dc := &dtt.DingTalkMessageTemplate{}
 			for _, j := range args.Template {
 				// parse template config
 				mapstructure.Decode(j, dc)

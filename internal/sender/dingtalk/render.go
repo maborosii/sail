@@ -4,7 +4,7 @@ import (
 	"bytes"
 	cm "sail/common"
 	"sail/global"
-	srv "sail/internal/receiver/service"
+	"sail/internal/model"
 	dt "sail/pkg/dingtalk"
 	"sail/pkg/errcode"
 	"text/template"
@@ -16,11 +16,11 @@ import (
 /*
 	通过模板文件渲染消息体
 */
-func Render(n srv.NotifyRequest, omt cm.OutMessageTemplate) (cm.OutMessage, error) {
+func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error) {
 
 	// var buf bytes.Buffer
 	switch n.(type) {
-	case *srv.ArgocdNotifyRequest:
+	case *model.ArgocdNotifyRequest:
 		expandRequest, err := n.Spread("mapstructure", "city", "app_name", "sync_status", "health_status", "occur_at")
 		if err != nil {
 			global.Logger.Error("spread argocd notify request to map occur error", zap.Error(err))
@@ -51,11 +51,11 @@ func Render(n srv.NotifyRequest, omt cm.OutMessageTemplate) (cm.OutMessage, erro
 		// fmt.Printf("%+v", *m)
 		return m, nil
 
-	case *srv.HarborReplicationRequest:
+	case *model.HarborReplicationRequest:
 		// TODO
 		// expandRequest, err := n.Spread("mapstructure", "job_status", "name_tag", "dest_domain", "resource_type", "occur_at")
 
-	case *srv.HarborUploadRequest:
+	case *model.HarborUploadRequest:
 		// TODO
 		// expandRequest, err := n.Spread("mapstructure", "app_name", "project", "occur_at")
 	default:
