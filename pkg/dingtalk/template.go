@@ -3,8 +3,8 @@ package dingtalk
 import cm "sail/common"
 
 // pre asset
-var a cm.Render
-var _ = a.(*DingTalkRender)
+// var a cm.Render
+// var _ = a.(*DingTalkRender)
 
 type DingTalkMessageTemplate struct {
 	MsgType string `mapstructure:"type"`

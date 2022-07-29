@@ -1,11 +1,12 @@
 package service
 
 import (
-	"fmt"
 	"sail/global"
 	"sail/internal/model"
+	"sail/internal/sender"
+	dts "sail/internal/sender/dingtalk"
+	dt "sail/pkg/dingtalk"
 	"sail/pkg/errcode"
-	q "sail/pkg/queue"
 
 	"go.uber.org/zap"
 )
@@ -28,17 +29,21 @@ func (s *Service) HarborUploadChart(req *model.HarborUploadRequest) error {
 		return errcode.RequestTypeNotSupport
 	}
 
-	// render
-	// var hrc = &dt.DingTalkRender{
-	// 	Template: global.TemplateHarborUploadChart,
-	// 	// Render:   dts.Render,
-	// }
+	// render + pusher
+	// TODO
+	var hrc = &dt.DingTalkRender{
+		Template: global.TemplateHarborUploadChart,
+		Render:   dts.Render,
+	}
+	got, _ := hrc.Rend(req, hrc.Template)
+	pusher := dt.NewDingTalkPusher("", "")
+	sender.PushMessage(pusher, got)
 
 	// push job
-	j := q.NewJob(func() error { return nil })
-	global.FlowControl.CommitJob(j)
-	fmt.Println("commit job to job queue success")
-	j.WaitDone()
+	// j := q.NewJob(func() error { return nil })
+	// global.FlowControl.CommitJob(j)
+	// fmt.Println("commit job to job queue success")
+	// j.WaitDone()
 	return nil
 }
 
