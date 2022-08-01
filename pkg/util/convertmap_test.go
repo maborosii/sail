@@ -9,14 +9,26 @@ func TestStructToMap(t *testing.T) {
 	m := struct {
 		C *struct {
 			AA string `json:"aa"`
-			BB string `json:"bb"`
+			BB []struct {
+				DD string `json:"dd"`
+			} `json:"bb"`
 		}
 		A string `json:""`
 		B string `json:""`
-	}{A: "1", B: "2", C: &struct {
-		AA string `json:"aa"`
-		BB string `json:"bb"`
-	}{AA: "3", BB: "4"}}
+	}{
+		A: "1",
+		B: "2",
+		C: &struct {
+			AA string `json:"aa"`
+			BB []struct {
+				DD string `json:"dd"`
+			} `json:"bb"`
+		}{
+			AA: "3",
+			BB: []struct {
+				DD string `json:"dd"`
+			}{{DD: "5"}, {DD: "6"}},
+		}}
 	tests := []struct {
 		name string
 	}{

@@ -1,6 +1,13 @@
 package model
 
-import "sail/pkg/errcode"
+import (
+	"sail/global"
+	"sail/pkg/errcode"
+	"sail/pkg/util"
+	"strings"
+
+	"go.uber.org/zap"
+)
 
 type harborMessageType string
 
@@ -71,7 +78,7 @@ type DestResource struct {
 	RegistryName string `json:"registry_name"  mapstructure:"dest_domain"`
 	RegistryType string `json:"registry_type" mapstructure:""`
 	Endpoint     string `json:"endpoint" mapstructure:""`
-	Namespace    string `json:"namespace" mapstructure:"namespace"`
+	Namespace    string `json:"namespace" mapstructure:"project"`
 }
 type SuccessfulArtifact struct {
 	Type    string `json:"type"  mapstructure:"success_resource_type"`
@@ -79,12 +86,56 @@ type SuccessfulArtifact struct {
 	NameTag string `json:"name_tag"  mapstructure:"success_name_tag"`
 }
 
+func (h *HarborReplicationRequest) GetResourceType() string {
+	// for _, resource := range h.EventData.Replication.SuccessfulArtifact {
+	// if resource.Type == "artifact" {
+	// return "Docker 镜像"
+	// }
+	// if resource.Type == "chart" {
+	// return "Helm Chart"
+	// }
+	// }
+	// return "Unknown Resources"
+	switch h.EventData.Replication.ArtifactType {
+	case "artifact":
+		return "Docker Image"
+	case "chart":
+		return "Helm Chart"
+	default:
+		return "Unknown Resources"
+	}
+}
+
+func (h *HarborReplicationRequest) GetResourceName() string {
+	var successTags []string
+	for _, tags := range h.EventData.Replication.SuccessfulArtifact {
+		successTags = append(successTags, tags.NameTag)
+	}
+	return strings.Join(successTags, ";")
+}
+
 func (h *HarborUploadRequest) Spread(tagType string, keys ...string) (map[string]interface{}, error) {
-	// TODO:
-	return map[string]interface{}{}, nil
+	out := make(map[string]interface{})
+	m, err := util.SpreadToMap(h, tagType)
+	if err != nil {
+		global.Logger.Error("harbor upload request convert to map failed", zap.Error(err))
+		return nil, err
+	}
+	for _, key := range keys {
+		out[key] = m[key]
+	}
+	return out, nil
 }
 
 func (h *HarborReplicationRequest) Spread(tagType string, keys ...string) (map[string]interface{}, error) {
-	// TODO:
-	return map[string]interface{}{}, nil
+	out := make(map[string]interface{})
+	m, err := util.SpreadToMap(h, tagType)
+	if err != nil {
+		global.Logger.Error("harbor replication request convert to map failed", zap.Error(err))
+		return nil, err
+	}
+	for _, key := range keys {
+		out[key] = m[key]
+	}
+	return out, nil
 }

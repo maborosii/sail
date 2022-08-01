@@ -20,6 +20,8 @@ func validateStructForReflect(in interface{}) (interface{}, error) {
 // 结构体转为Map[string]interface{}
 // 将结构体属性拉平，即map的层级只有一层
 // 需要原结构的所有属性tagName是不同的
+// bug: 若 value 为结构体切片则无法展开，数组本身属性都不适合拉平展开
+// 建议若该属性为结构体切片，则不要进行展开，自行定义方法获取想要的值。
 func SpreadToMap(in interface{}, tagName string) (map[string]interface{}, error) {
 	out := make(map[string]interface{})
 	newIn, err := validateStructForReflect(in)
