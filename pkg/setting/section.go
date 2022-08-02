@@ -5,14 +5,15 @@ type Config struct {
 	Receiver  Receiver                          `toml:"receiver"`
 	Template  map[string]map[string]interface{} `toml:"template" mapstructure:"template"`
 	LogConfig *LogConf                          `toml:"logconfig"`
-	JobQueue  JobQueueConfig                    `toml:"job_queue"`
+	// JobQueue  JobQueueConfig                    `toml:"job_queue"`
 }
 type Receiver struct {
 	Port int `toml:"port"`
 }
-type JobQueueConfig struct {
-	Size int `toml:"size"`
-}
+
+// type JobQueueConfig struct {
+// Size int `toml:"size"`
+// }
 
 type LogConf struct {
 	Level      string `toml:"level"`

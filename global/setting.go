@@ -9,13 +9,26 @@ import (
 )
 
 var (
+	ConfigPath string = "configs"
+)
+var (
 	Logger      *zap.Logger
-	ConfigPath  string
-	BucketSize  int
 	FlowControl *q.FlowControl
+)
+var (
+	PusherOfDingtalk *dt.DingTalkPusher
+)
 
-	TemplateHarborReplicationImage *dt.DingTalkMessageTemplate
-	TemplateHarborReplicationChart *dt.DingTalkMessageTemplate
-	TemplateHarborUploadChart      *dt.DingTalkMessageTemplate
-	TemplateArgocdSync             *dt.DingTalkMessageTemplate
+// var (
+// 	TemplateDingTalkHarborReplicationImage *dt.DingTalkMessageTemplate
+// 	TemplateDingTalkHarborReplicationChart *dt.DingTalkMessageTemplate
+// 	TemplateDingTalkHarborUploadChart      *dt.DingTalkMessageTemplate
+// 	TemplateDingTalkArgocdSync             *dt.DingTalkMessageTemplate
+// )
+
+var (
+	TemplateDingTalkHarborReplicationImage = new(dt.DingTalkMessageTemplate)
+	TemplateDingTalkHarborReplicationChart = new(dt.DingTalkMessageTemplate)
+	TemplateDingTalkHarborUploadChart      = new(dt.DingTalkMessageTemplate)
+	TemplateDingTalkArgocdSync             = new(dt.DingTalkMessageTemplate)
 )

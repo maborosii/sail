@@ -1,0 +1,20 @@
+POST http://localhost:5004/api/v1/harbor/upload/chart HTTP/1.1
+content-type: application/json
+
+{
+    "type": "UPLOAD_CHART",
+    "occur_at": 1655959720,
+    "operator": "admin",
+    "event_data": {
+        "resources": [{
+            "tag": "0.1.0",
+            "resource_url": "http://harbor.domain.com:5002/chartrepo/chart-dg/charts/ale-task-job-executor-supervision-0.1.0.tgz"
+        }],
+        "repository": {
+            "name": "ale-task-job-executor-supervision",
+            "namespace": "chart-dg",
+            "repo_full_name": "chart-dg/ale-task-job-executor-supervision",
+            "repo_type": "public"
+        }
+    }
+}

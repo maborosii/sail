@@ -1,15 +1,16 @@
 package receiver
 
 import (
+	"fmt"
 	"net/http"
 	"sail/internal/receiver/routers"
 	"time"
 )
 
-func Reveiver() {
+func Receiver(port int) {
 	router := routers.NewRouter()
 	s := &http.Server{
-		Addr:           ":8080",
+		Addr:           fmt.Sprintf(":%d", port),
 		Handler:        router,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,

@@ -3,8 +3,8 @@ package service
 import (
 	"fmt"
 	"sail/global"
-	con "sail/internal/controller"
 	"sail/internal/model"
+	sd "sail/internal/sender"
 	dts "sail/internal/sender/dingtalk"
 	dt "sail/pkg/dingtalk"
 	"sail/pkg/errcode"
@@ -33,16 +33,16 @@ func (s *Service) HarborUploadChart(req *model.HarborUploadRequest) error {
 
 	// render + pusher
 	var hrc = &dt.DingTalkRender{
-		Template: global.TemplateHarborUploadChart,
+		Template: global.TemplateDingTalkHarborUploadChart,
 		Render:   dts.Render,
 	}
 	got, _ := hrc.Rend(req, hrc.Template)
-	pusher := dt.NewDingTalkPusher("", "")
-	m := con.PushList{}
-	m.Init(pusher)
+	// pusher := dt.NewDingTalkPusher("", "")
+	// m := con.NewPusherList()
+	// m.RegisterPusher(pusher)
 	// push job
 	j := q.NewJob(func() error {
-		m.Exec(got)
+		sd.PusherList.Exec(got)
 		return nil
 	})
 	global.FlowControl.CommitJob(j)

@@ -41,10 +41,16 @@ func TestDingTalkPusher_Push(t *testing.T) {
 	}
 	access_token, _ := os.ReadFile(".access_token")
 	secret, _ := os.ReadFile(".secret")
+	d := &DingTalkConfig{
+		AccessToken: string(access_token),
+		Secret:      string(secret),
+		Domain:      "https://oapi.dingtalk.com/robot/send",
+	}
 	// fmt.Println(string(access_token), string(secret))
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := NewDingTalkPusher(string(access_token), string(secret))
+			// p := NewDingTalkPusher(string(access_token), string(secret))
+			p := NewDingTalkPusher(d)
 			fmt.Printf("%+v", p)
 			if err := p.Push(tt.args.m); (err != nil) != tt.wantErr {
 				t.Errorf("DingTalkPusher.Push() error = %v, wantErr %v", err, tt.wantErr)

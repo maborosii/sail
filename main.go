@@ -1,28 +1,32 @@
-// package main
+package main
 
-// func main() {
+import (
+	"fmt"
+	"sail/global"
+	"sail/infra"
+	"sail/infra/starters"
+	"sail/pkg/setting"
+)
 
-// }
-// package main
+func main() {
+	// flowControl := q.NewFlowControl()
+	// myHandler := MyHandler{
+	// 	flowControl: flowControl,
+	// }
+	// http.Handle("/", &myHandler)
 
-// import (
-// 	"fmt"
-// 	"net/http"
-// 	q "sail/pkg/queue"
-// 	"time"
-
-// 	"github.com/google/uuid"
-// )
-
-// func main() {
-// 	flowControl := q.NewFlowControl()
-// 	myHandler := MyHandler{
-// 		flowControl: flowControl,
-// 	}
-// 	http.Handle("/", &myHandler)
-
-// 	http.ListenAndServe(":8080", nil)
-// }
+	// http.ListenAndServe(":8080", nil)
+	configPath := global.ConfigPath
+	conf, err := setting.NewSetting(configPath)
+	if err != nil {
+		panic(fmt.Sprintf("get config from %s, occur err; %s", configPath, err))
+	}
+	confStruct := &setting.Config{}
+	conf.ReadConfig(confStruct)
+	app := infra.NewBootApplication(confStruct)
+	app.Run()
+	// select {}
+}
 
 // type MyHandler struct {
 // 	flowControl *q.FlowControl
@@ -45,31 +49,6 @@
 // 	fmt.Println("commit job to job queue success")
 // 	job.WaitDone()
 // }
-
-package main
-
-import (
-	"bytes"
-	"fmt"
-	"text/template"
-)
-
-type Person struct {
-	Name string
-	Age  int
-}
-
-func main() {
-	var buf bytes.Buffer
-
-	p := Person{"longshuai", 23}
-	tmpl, err := template.New("test").Parse("Name: {{.Name}}, Age: {{.Age}}")
-	if err != nil {
-		panic(err)
-	}
-	err = tmpl.Execute(&buf, p)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(buf.String())
+func init() {
+	infra.Register(&starters.LogStarter{}, &starters.DingTalkStarter{}, &starters.RecvStarter{}, &starters.FlowControlStarter{})
 }

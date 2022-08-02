@@ -165,12 +165,17 @@ func TestRender(t *testing.T) {
 	}
 	access_token, _ := os.ReadFile("../../../pkg/dingtalk/.access_token")
 	secret, _ := os.ReadFile("../../../pkg/dingtalk/.secret")
+	d := &dt.DingTalkConfig{
+		AccessToken: string(access_token),
+		Secret:      string(secret),
+		Domain:      "https://oapi.dingtalk.com/robot/send",
+	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// got, err := Render(tt.args.n, tt.args.templateStr)
 			m, _ := Render(tt.args.n, tt.args.templateStr)
 			fmt.Printf("%+v\n", m)
-			sender.PushMessage(dt.NewDingTalkPusher(string(access_token), string(secret)), m)
+			sender.PushMessage(dt.NewDingTalkPusher(d), m)
 
 			// if (err != nil) != tt.wantErr {
 			// t.Errorf("Render() error = %v, wantErr %v", err, tt.wantErr)

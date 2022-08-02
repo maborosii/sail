@@ -1,5 +1,5 @@
 logs/
 .access_token
 .secret
-config/
+configs/
 *.toml

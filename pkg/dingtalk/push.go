@@ -14,7 +14,7 @@ import (
 )
 
 type DingTalkConfig struct {
-	Delay       int    `mapstructure:"delay"`
+	// Delay       int    `mapstructure:"delay"`
 	AccessToken string `mapstructure:"access_token"`
 	Secret      string `mapstructure:"secret"`
 	Domain      string `mapstructure:"domain"`
@@ -24,14 +24,16 @@ type DingTalkConfig struct {
 type DingTalkPusher struct {
 	access_token string
 	secret       string
+	domain       string
 
 	Client *http.Client
 }
 
-func NewDingTalkPusher(access_token string, secret string) *DingTalkPusher {
+func NewDingTalkPusher(dtc *DingTalkConfig) *DingTalkPusher {
 	return &DingTalkPusher{
-		access_token: access_token,
-		secret:       secret,
+		access_token: dtc.AccessToken,
+		secret:       dtc.Secret,
+		domain:       dtc.Domain,
 	}
 }
 
@@ -64,7 +66,7 @@ func (p *DingTalkPusher) Push(m cm.OutMessage) error {
 		p.Client = http.DefaultClient
 	}
 
-	u, err := p.completeUrl(`https://oapi.dingtalk.com/robot/send`)
+	u, err := p.completeUrl(p.domain)
 	if err != nil {
 		panic(err)
 	}
@@ -88,6 +90,10 @@ func (p *DingTalkPusher) Push(m cm.OutMessage) error {
 		return dingError
 	}
 	return nil
+}
+
+func (p *DingTalkPusher) Type() string {
+	return "dingtalk"
 }
 
 // dingtalk 推送返回消息体

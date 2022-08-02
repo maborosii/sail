@@ -22,7 +22,7 @@ func TestSetting_ReadConfig(t *testing.T) {
 	args := &Config{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s, _ := NewSetting("../../config")
+			s, _ := NewSetting("../../configs")
 			if err := s.ReadConfig(args); (err != nil) != tt.wantErr {
 				t.Errorf("Setting.ReadConfig() error = %v, wantErr %v", err, tt.wantErr)
 			}

@@ -9,6 +9,8 @@ import (
 	"github.com/google/uuid"
 )
 
+var queueSize = 200
+
 type Job struct {
 	UUID      string
 	DoneChan  chan struct{}
@@ -131,7 +133,7 @@ type FlowControl struct {
 }
 
 func NewFlowControl() *FlowControl {
-	jobQueue := NewJobQueue(1)
+	jobQueue := NewJobQueue(queueSize)
 	fmt.Println("init job queue success")
 
 	m := NewWorkerManager(jobQueue)

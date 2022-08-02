@@ -1,12 +1,13 @@
 package sender
 
-import cm "sail/common"
+import (
+	"sail/global"
+)
 
-type Pusher interface {
-	Push(m cm.OutMessage) error
-}
+// var a Pusher
+// var _ = a.(*dt.DingTalkPusher)
+var PusherList = NewPusherList()
 
-func PushMessage(p Pusher, m cm.OutMessage) error {
-	p.Push(m)
-	return nil
+func init() {
+	PusherList.RegisterPusher(global.PusherOfDingtalk)
 }
