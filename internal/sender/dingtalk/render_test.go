@@ -147,12 +147,10 @@ func TestRender(t *testing.T) {
 							RepoFullName: "chart-qy/ale-case-service",
 							RepoType:     "public",
 						},
-						Resources: model.Resources{
-							Resources: []model.Resource{
-								{
-									Tag:         "0.1.0",
-									ResourceURL: "http://harbor.domain.com:5002/chartrepo/chart-dg/charts/ale-task-job-executor-supervision-0.1",
-								},
+						Resources: []model.Resource{
+							{
+								Tag:         "0.1.0",
+								ResourceURL: "http://harbor.domain.com:5002/chartrepo/chart-dg/charts/ale-task-job-executor-supervision-0.1",
 							},
 						},
 					},

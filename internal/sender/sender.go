@@ -1,6 +1,7 @@
 package sender
 
 import (
+	"fmt"
 	"sail/global"
 )
 
@@ -9,5 +10,6 @@ import (
 var PusherList = NewPusherList()
 
 func init() {
+	fmt.Println("init sender...")
 	PusherList.RegisterPusher(global.PusherOfDingtalk)
 }

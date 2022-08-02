@@ -62,9 +62,15 @@ func (p *DingTalkPusher) Push(m cm.OutMessage) error {
 
 	//asset
 	mm := m.(*DingTalkMessage)
+	fmt.Printf("%+v\n", *mm)
+
+	fmt.Printf("%+v", p)
 	if p.Client == nil {
 		p.Client = http.DefaultClient
 	}
+	// defer func() {
+	// 	recover()
+	// }()
 
 	u, err := p.completeUrl(p.domain)
 	if err != nil {

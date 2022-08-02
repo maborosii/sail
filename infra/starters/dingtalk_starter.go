@@ -30,7 +30,9 @@ func (d *DingTalkStarter) setupPusher(conf *setting.Config) {
 			}
 		}
 	}
+	fmt.Printf("%+v\n", *dtc)
 	global.PusherOfDingtalk = dt.NewDingTalkPusher(dtc)
+	fmt.Printf("%+v\n", *global.PusherOfDingtalk)
 }
 
 func (d *DingTalkStarter) setupTemplate(conf *setting.Config) {
@@ -38,7 +40,6 @@ func (d *DingTalkStarter) setupTemplate(conf *setting.Config) {
 		// parse template config
 		if tt == "dingtalk" {
 			for tn, jj := range j {
-				fmt.Println(tn)
 				switch tn {
 				case "harbor_upload_chart":
 					err := mapstructure.Decode(jj, global.TemplateDingTalkHarborUploadChart)

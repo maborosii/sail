@@ -1,6 +1,7 @@
 package sender
 
 import (
+	"fmt"
 	cm "sail/common"
 	"sail/global"
 	"sync"
@@ -40,6 +41,7 @@ func (p *PushList) Exec(om cm.OutMessage) {
 	w := sync.WaitGroup{}
 	for _, pp := range p.Pushers {
 		w.Add(1)
+		fmt.Printf("pusher list ****%+v\n", pp.Type())
 		go func(om cm.OutMessage, pp Pusher) {
 			defer w.Done()
 			err := pp.Push(om)

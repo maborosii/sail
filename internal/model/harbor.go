@@ -37,7 +37,7 @@ type HarborReplicationRequest struct {
 
 type UploadEventData struct {
 	Repository Repository `json:"repository,omitempty" mapstructure:""`
-	Resources  Resources  `json:"resources,omitempty" mapstructure:""`
+	Resources  []Resource `json:"resources,omitempty" mapstructure:""`
 }
 
 type ReplicationEventData struct {
@@ -49,9 +49,10 @@ type Repository struct {
 	RepoFullName string `json:"repo_full_name" mapstructure:""`
 	RepoType     string `json:"repo_type" mapstructure:""`
 }
-type Resources struct {
-	Resources []Resource `json:"resources" mapstructure:""`
-}
+
+// type Resources struct {
+// 	Resources []Resource `json:"resources" mapstructure:""`
+// }
 type Resource struct {
 	Tag         string `json:"tag" mapstructure:"chart_tag"`
 	ResourceURL string `json:"resource_url" mapstructure:"app_chart_url"`

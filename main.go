@@ -5,6 +5,7 @@ import (
 	"sail/global"
 	"sail/infra"
 	"sail/infra/starters"
+	_ "sail/internal/sender"
 	"sail/pkg/setting"
 )
 
@@ -24,6 +25,7 @@ func main() {
 	confStruct := &setting.Config{}
 	conf.ReadConfig(confStruct)
 	app := infra.NewBootApplication(confStruct)
+	// fmt.Printf("%+v", *global.PusherOfDingtalk)
 	app.Run()
 	// select {}
 }
