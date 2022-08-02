@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sail/global"
 	"sail/infra"
+	sd "sail/internal/sender"
 	dt "sail/pkg/dingtalk"
 	"sail/pkg/setting"
 
@@ -21,6 +22,7 @@ func (d *DingTalkStarter) Setup(conf *setting.Config) {
 }
 
 func (d *DingTalkStarter) setupPusher(conf *setting.Config) {
+	fmt.Println("init dingtalk pusher...")
 	dtc := &dt.DingTalkConfig{}
 	for k, v := range conf.Senders {
 		if k == "dingtalk" {
@@ -30,9 +32,11 @@ func (d *DingTalkStarter) setupPusher(conf *setting.Config) {
 			}
 		}
 	}
-	fmt.Printf("%+v\n", *dtc)
+	// fmt.Printf("%+v\n", *dtc)
 	global.PusherOfDingtalk = dt.NewDingTalkPusher(dtc)
-	fmt.Printf("%+v\n", *global.PusherOfDingtalk)
+	// 注册pusher
+	sd.PusherList.RegisterPusher(global.PusherOfDingtalk)
+	// fmt.Printf("%+v\n", *global.PusherOfDingtalk)
 }
 
 func (d *DingTalkStarter) setupTemplate(conf *setting.Config) {

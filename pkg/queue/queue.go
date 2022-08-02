@@ -4,7 +4,6 @@ import (
 	"container/list"
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -27,7 +26,7 @@ func NewJob(HandleJob func() error) *Job {
 
 // 消费者从队列中取出该job时 执行具体的处理逻辑
 func (job *Job) Execute() error {
-	fmt.Println(time.Now())
+	// fmt.Println(time.Now())
 	fmt.Println(job.UUID, "job start to execute ")
 	return job.HandleJob()
 }
@@ -82,7 +81,7 @@ func (q *JobQueue) PopJob() *Job {
 		return nil
 	}
 
-	fmt.Println(q.size)
+	// fmt.Println(q.size)
 	q.size--
 	return q.queue.Remove(q.queue.Front()).(*Job)
 }

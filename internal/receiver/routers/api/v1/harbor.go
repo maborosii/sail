@@ -125,5 +125,6 @@ func (h Harbor) NotifyHarborChartUpload(c *gin.Context) {
 	// defer cancel()
 
 	global.Logger.Info("request for NotifyHarborChartUpload handle successful")
+	// response.ToResponse(nil)
 	response.ToResponse(gin.H{})
 }

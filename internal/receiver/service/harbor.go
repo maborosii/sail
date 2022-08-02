@@ -1,11 +1,15 @@
 package service
 
 import (
+	"fmt"
 	"sail/global"
 	"sail/internal/model"
+
+	sd "sail/internal/sender"
 	dts "sail/internal/sender/dingtalk"
 	dt "sail/pkg/dingtalk"
 	"sail/pkg/errcode"
+	q "sail/pkg/queue"
 
 	"go.uber.org/zap"
 )
@@ -38,15 +42,15 @@ func (s *Service) HarborUploadChart(req *model.HarborUploadRequest) error {
 	// m := con.NewPusherList()
 	// m.RegisterPusher(pusher)
 	// push job
-	// j := q.NewJob(func() error {
-	// 	sd.PusherList.Exec(got)
-	// 	return nil
-	// })
-	// global.FlowControl.CommitJob(j)
-	// fmt.Println("commit job to job queue success")
-	// j.WaitDone()
+	j := q.NewJob(func() error {
+		sd.PusherList.Exec(got)
+		return nil
+	})
+	global.FlowControl.CommitJob(j)
+	fmt.Println("commit job to job queue success")
+	j.WaitDone()
 	// sd.PusherList.Exec(got)
-	global.PusherOfDingtalk.Push(got)
+	// global.PusherOfDingtalk.Push(got)
 	return nil
 }
 

@@ -5,7 +5,8 @@ import (
 	"sail/global"
 	"sail/infra"
 	"sail/infra/starters"
-	_ "sail/internal/sender"
+
+	// _ "sail/internal/sender"
 	"sail/pkg/setting"
 )
 
@@ -52,5 +53,5 @@ func main() {
 // 	job.WaitDone()
 // }
 func init() {
-	infra.Register(&starters.LogStarter{}, &starters.DingTalkStarter{}, &starters.RecvStarter{}, &starters.FlowControlStarter{})
+	infra.Register(&starters.FlowControlStarter{}, &starters.LogStarter{}, &starters.DingTalkStarter{}, &starters.RecvStarter{})
 }

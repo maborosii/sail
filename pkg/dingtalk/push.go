@@ -39,7 +39,7 @@ func NewDingTalkPusher(dtc *DingTalkConfig) *DingTalkPusher {
 
 // 对 url 加签并拼接
 func (p *DingTalkPusher) completeUrl(mainDomain string) (*url.URL, error) {
-	fmt.Println("p.secret:", p.secret)
+	// fmt.Println("p.secret:", p.secret)
 	sign, timestamp := toSign(p.secret)
 
 	u, err := url.Parse(mainDomain)
@@ -62,15 +62,12 @@ func (p *DingTalkPusher) Push(m cm.OutMessage) error {
 
 	//asset
 	mm := m.(*DingTalkMessage)
-	fmt.Printf("%+v\n", *mm)
+	// fmt.Printf("%+v\n", *mm)
 
-	fmt.Printf("%+v", p)
+	// fmt.Printf("%+v", p)
 	if p.Client == nil {
 		p.Client = http.DefaultClient
 	}
-	// defer func() {
-	// 	recover()
-	// }()
 
 	u, err := p.completeUrl(p.domain)
 	if err != nil {
@@ -83,7 +80,7 @@ func (p *DingTalkPusher) Push(m cm.OutMessage) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(u.String())
+	// fmt.Println(u.String())
 	resp, err := p.Client.Post(u.String(), "application/json", buf)
 	if err != nil {
 		return err
