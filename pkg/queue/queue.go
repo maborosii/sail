@@ -113,6 +113,11 @@ func NewWorkerManager(jobQueue *JobQueue) *WorkerManager {
 }
 func (m *WorkerManager) createWorker() error {
 	go func() {
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Printf("when execute job occured panic, panic: %s\n", err)
+			}
+		}()
 		var currentJob *Job
 		for range m.jobQueue.waitJob() {
 			currentJob = m.jobQueue.PopJob()
