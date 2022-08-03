@@ -52,5 +52,5 @@ func (a ArgoCD) NotifyArgocdSyncStatus(c *gin.Context) {
 	}
 
 	global.Logger.Info("request for NotifyArgocdSyncStatus handle successful")
-	response.ToResponse(gin.H{})
+	response.ToResponse(nil)
 }

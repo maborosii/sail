@@ -44,6 +44,11 @@ func (p *PushList) Exec(om cm.OutMessage) {
 	for _, pp := range p.Pushers {
 		w.Add(1)
 		go func(om cm.OutMessage, pp Pusher) {
+			defer func() {
+				if err := recover(); err != nil {
+					global.Logger.Error("push action in pusherlist occured error", zap.Any("error", err))
+				}
+			}()
 			defer w.Done()
 			err := pp.Push(om)
 			if err != nil {

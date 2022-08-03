@@ -16,8 +16,6 @@ func NewRouter() *gin.Engine {
 	harbor := v1.NewHarbor()
 	apiv1 := r.Group("/api/v1")
 	{
-		// apiv1.POST("/harbor/replication/image", harbor.NotifyHarborImageReplication)
-		// apiv1.POST("/harbor/replication/chart", harbor.NotifyHarborChartReplication)
 		apiv1.POST("/harbor/replication", harbor.NotifyHarborReplication)
 		apiv1.POST("/harbor/upload/chart", harbor.NotifyHarborChartUpload)
 	}

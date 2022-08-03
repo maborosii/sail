@@ -1,0 +1,14 @@
+POST http://localhost:5004/api/v1/argocd/notify HTTP/1.1
+content-type: application/json
+
+{
+    "type": "argocd",
+    "operator": "default",
+    "event_data": {
+        "source": "清远",
+        "app_name": "ale-case-service",
+        "sync_status": "Failed",
+        "health_status": "Healthy"
+    },
+    "occur_at": 1659514881
+}

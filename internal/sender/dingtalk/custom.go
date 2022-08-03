@@ -1,5 +1,7 @@
 package dingtalk
 
+import "strings"
+
 var cityList = map[string]string{
 	"jm": "江门",
 	"zs": "中山",
@@ -39,4 +41,16 @@ func formatProjectCity(toCity string, dictCity map[string]string) string {
 		}
 	}
 	return "UNKNOWN"
+}
+func colorMessage(jobStatus string) string {
+	switch strings.ToLower(jobStatus) {
+	case "success":
+		// green
+		return "#3CB371"
+	case "succeeded":
+		return "#3CB371"
+	default:
+		// red
+		return "#FF0000"
+	}
 }

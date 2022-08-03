@@ -50,7 +50,7 @@ func (h Harbor) NotifyHarborReplication(c *gin.Context) {
 	}
 
 	global.Logger.Info("request for NotifyHarborImageReplication handle successful")
-	response.ToResponse(gin.H{})
+	response.ToResponse(nil)
 }
 
 // @Summary harbor chart复制处理 -- from 源harbor的replication的webhook
@@ -120,11 +120,7 @@ func (h Harbor) NotifyHarborChartUpload(c *gin.Context) {
 		return
 	}
 
-	// timeout
-	// _, cancel := context.WithTimeout(c, 10*time.Second)
-	// defer cancel()
-
 	global.Logger.Info("request for NotifyHarborChartUpload handle successful")
-	// response.ToResponse(nil)
-	response.ToResponse(gin.H{})
+	response.ToResponse(nil)
+	// response.ToResponse(gin.H{})
 }

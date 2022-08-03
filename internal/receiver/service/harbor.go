@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"sail/global"
 	"sail/internal/model"
 
@@ -37,24 +36,72 @@ func (s *Service) HarborUploadChart(req *model.HarborUploadRequest) error {
 		Template: global.TemplateDingTalkHarborUploadChart,
 		Render:   dts.Render,
 	}
-	got, _ := hrc.Rend(req, hrc.Template)
-	// pusher := dt.NewDingTalkPusher("", "")
-	// m := con.NewPusherList()
-	// m.RegisterPusher(pusher)
+	got, err := hrc.Rend(req, hrc.Template)
+	if err != nil {
+		global.Logger.Error("rend upload_chart message occured err", zap.Error(err))
+		return err
+	}
+
 	// push job
 	j := q.NewJob(func() error {
 		sd.PusherList.Exec(got)
 		return nil
 	})
 	global.FlowControl.CommitJob(j)
-	fmt.Println("commit job to job queue success")
+	global.Logger.Debug("commit replication job to job queue success", zap.String("job_uuid", j.UUID))
 	j.WaitDone()
 	// sd.PusherList.Exec(got)
 	// global.PusherOfDingtalk.Push(got)
 	return nil
 }
 
-func (s *Service) HarborReplication(req *model.HarborReplicationRequest) error { return nil }
+func (s *Service) HarborReplication(req *model.HarborReplicationRequest) error {
+	msgType, err := req.HarborMsgType()
+	if err != nil {
+		global.Logger.Error("replication request's type is not support",
+			zap.Error(err),
+			zap.String("request type", req.Type))
+		return err
+	}
+	if (msgType != model.UPLOAD_CHART) && (msgType != model.REPLICATION) {
+		global.Logger.Error("replication request's type is not adaption",
+			zap.Error(errcode.RequestTypeNotSupport),
+			zap.String("request type", req.Type))
+		return errcode.RequestTypeNotSupport
+	}
 
-// func (s *Service) HarborReplicationChart(req *model.HarborReplicationRequest) error { return nil }
-// func (s *Service) HarborReplicationImage(req *model.HarborReplicationRequest) error { return nil }
+	// render + pusher
+	var replicationTemplate *dt.DingTalkMessageTemplate
+
+	switch req.GetResourceType() {
+	case "Helm Chart":
+		replicationTemplate = global.TemplateDingTalkHarborReplicationChart
+	case "Docker Image":
+		replicationTemplate = global.TemplateDingTalkHarborReplicationImage
+	default:
+		global.Logger.Error("replication request's resource type is not support", zap.String("resource_type", req.EventData.Replication.ArtifactType))
+		return errcode.RequestTypeNotSupport
+	}
+
+	var hrc = &dt.DingTalkRender{
+		Template: replicationTemplate,
+		Render:   dts.Render,
+	}
+
+	got, err := hrc.Rend(req, hrc.Template)
+
+	if err != nil {
+		global.Logger.Error("rend replication message occured err", zap.Error(err))
+		return err
+	}
+
+	// push job
+	j := q.NewJob(func() error {
+		sd.PusherList.Exec(got)
+		return nil
+	})
+	global.FlowControl.CommitJob(j)
+	global.Logger.Debug("commit replication job to job queue success", zap.String("job_uuid", j.UUID))
+	j.WaitDone()
+	return nil
+}

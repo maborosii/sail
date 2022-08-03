@@ -53,5 +53,9 @@ func main() {
 // 	job.WaitDone()
 // }
 func init() {
-	infra.Register(&starters.FlowControlStarter{}, &starters.LogStarter{}, &starters.DingTalkStarter{}, &starters.RecvStarter{})
+	// 配置初始化
+	infra.Register(&starters.LogStarter{}, &starters.FlowControlStarter{}, &starters.DingTalkStarter{})
+
+	// 启动服务
+	infra.Register(&starters.RecvStarter{})
 }

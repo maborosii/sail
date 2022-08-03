@@ -33,12 +33,14 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 			SyncStatus   string
 			HealthStatus string
 			OccurTime    string
+			Color        string
 		}{
 			City:         expandRequest["city"].(string),
 			AppName:      expandRequest["app_name"].(string),
 			SyncStatus:   expandRequest["sync_status"].(string),
 			HealthStatus: expandRequest["health_status"].(string),
 			OccurTime:    (time.Unix(int64(expandRequest["occur_at"].(int)), 0)).Format("2006-01-02 15:04:05"),
+			Color:        colorMessage(expandRequest["sync_status"].(string)),
 		}
 		templateStrSlice := omt.GetSentence()
 		outputStrSlice, err := rendSlice(templateStrSlice, a)
@@ -70,6 +72,7 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 			ResourceType string
 			JobStatus    string
 			OccurTime    string
+			Color        string
 		}{
 			City:         formatDomainCity(expandRequest["dest_domain"].(string), cityList),
 			AppName:      expandRequest["app_name"].(string),
@@ -77,6 +80,7 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 			ResourceType: expandRequest["resource_type"].(string),
 			JobStatus:    expandRequest["job_status"].(string),
 			OccurTime:    (time.Unix(int64(expandRequest["occur_at"].(int)), 0)).Format("2006-01-02 15:04:05"),
+			Color:        colorMessage(expandRequest["job_status"].(string)),
 		}
 		templateStrSlice := omt.GetSentence()
 		outputStrSlice, err := rendSlice(templateStrSlice, a)
@@ -90,6 +94,7 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 		return m, nil
 
 	case *model.HarborUploadRequest:
+		uploadChartStatus := "Success"
 		expandRequest, err := n.Spread("mapstructure", "app_name", "project", "occur_at")
 		if err != nil {
 			global.Logger.Error("spread harbor upload request to map occur error", zap.Error(err))
@@ -101,12 +106,14 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 			Project   string
 			JobStatus string
 			OccurTime string
+			Color     string
 		}{
 			City:      formatProjectCity(expandRequest["project"].(string), cityList),
 			AppName:   expandRequest["app_name"].(string),
 			Project:   expandRequest["project"].(string),
-			JobStatus: "Success",
+			JobStatus: uploadChartStatus,
 			OccurTime: (time.Unix(int64(expandRequest["occur_at"].(int)), 0)).Format("2006-01-02 15:04:05"),
+			Color:     colorMessage(uploadChartStatus),
 		}
 		templateStrSlice := omt.GetSentence()
 		outputStrSlice, err := rendSlice(templateStrSlice, a)

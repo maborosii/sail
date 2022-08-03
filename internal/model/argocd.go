@@ -2,10 +2,20 @@ package model
 
 import (
 	"sail/global"
+	"sail/pkg/errcode"
 	"sail/pkg/util"
 
 	"go.uber.org/zap"
 )
+
+func (c *CommonRequest) ArgocdMsgType() (string, error) {
+	switch c.Type {
+	case "argocd":
+		return "argocd", nil
+	default:
+		return "", errcode.RequestTypeNotSupport
+	}
+}
 
 type ArgocdNotifyRequest struct {
 	*CommonRequest
