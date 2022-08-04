@@ -17,7 +17,9 @@ type Pusher interface {
 
 // just for test
 func PushMessage(p Pusher, m cm.OutMessage) error {
-	p.Push(m)
+	if err := p.Push(m); err != nil {
+		return err
+	}
 	return nil
 }
 

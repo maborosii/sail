@@ -24,7 +24,9 @@ func main() {
 		panic(fmt.Sprintf("get config from %s, occur err; %s", configPath, err))
 	}
 	confStruct := &setting.Config{}
-	conf.ReadConfig(confStruct)
+	if err = conf.ReadConfig(confStruct); err != nil {
+		panic(err)
+	}
 	app := infra.NewBootApplication(confStruct)
 	// fmt.Printf("%+v", *global.PusherOfDingtalk)
 	app.Run()

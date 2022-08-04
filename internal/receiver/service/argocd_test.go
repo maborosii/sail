@@ -26,11 +26,11 @@ func TestArgocdNotifyRequest_Spread(t *testing.T) {
 		{
 			name: "test",
 			fields: fields{
-				&model.CommonRequest{
-					"1", 2, "3",
+				CommonRequest: &model.CommonRequest{
+					Type: "1", OccurAt: 2, Operator: "3",
 				},
-				model.ArgocdEventData{
-					"dg", "test_app", "test", "test",
+				EventData: model.ArgocdEventData{
+					Source: "dg", AppName: "test_app", SyncStatus: "test", HealthStatus: "test",
 				},
 			},
 			args: args{

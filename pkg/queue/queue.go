@@ -141,7 +141,10 @@ func NewFlowControl() *FlowControl {
 	fmt.Println("init job queue success")
 
 	m := NewWorkerManager(jobQueue)
-	m.createWorker()
+	if err := m.createWorker(); err != nil {
+		fmt.Printf("init job queue createworker occured err, err: %s", err)
+		panic(err)
+	}
 	fmt.Println("init worker success")
 
 	control := &FlowControl{

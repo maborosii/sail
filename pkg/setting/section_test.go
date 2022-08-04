@@ -30,7 +30,9 @@ func TestSetting_ReadConfig(t *testing.T) {
 			for k, v := range args.Senders {
 				if k == "dingtalk" {
 					// parse dingtalk config
-					mapstructure.Decode(v, d)
+					if err := mapstructure.Decode(v, d); err != nil {
+						panic(err)
+					}
 					fmt.Printf("%+v\n", d)
 				}
 			}
@@ -38,7 +40,9 @@ func TestSetting_ReadConfig(t *testing.T) {
 			for _, j := range args.Template {
 				// parse template config
 				for _, jj := range j {
-					mapstructure.Decode(jj, dc)
+					if err := mapstructure.Decode(jj, dc); err != nil {
+						panic(err)
+					}
 					fmt.Printf("%+v\n", dc)
 				}
 				// mapstructure.Decode(j, dc)

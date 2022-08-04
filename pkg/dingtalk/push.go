@@ -81,8 +81,11 @@ func (p *DingTalkPusher) Push(m cm.OutMessage) error {
 	defer resp.Body.Close()
 
 	dingError := &dingTalkError{}
-	json.NewDecoder(resp.Body).Decode(dingError)
-	if dingError.code != 0 {
+
+	if err = json.NewDecoder(resp.Body).Decode(dingError); err != nil {
+		return err
+	}
+	if dingError.Code != 0 {
 		return dingError
 	}
 	return nil
@@ -94,12 +97,12 @@ func (p *DingTalkPusher) Type() string {
 
 // dingtalk 推送返回消息体
 type dingTalkError struct {
-	code    int    `json:"errcode"`
-	message string `json:"errmsg"`
+	Code    int    `json:"errcode"`
+	Message string `json:"errmsg"`
 }
 
 func (d *dingTalkError) Error() string {
-	return fmt.Sprintf("DingTalk API error code:%d msg:%q", d.code, d.message)
+	return fmt.Sprintf("DingTalk API error code:%d msg:%q", d.Code, d.Message)
 }
 
 // 定义 dingtalk post 消息体
