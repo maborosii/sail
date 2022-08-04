@@ -31,5 +31,7 @@ jobs:
       - name: Lint
         run: make lint
       - name: Test
-        run: make test
+        run: |
+          test_packege=$(go list ./... | grep -vi dingtalk)
+          go test ${test_package}
         
