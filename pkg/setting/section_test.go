@@ -48,7 +48,6 @@ func TestSetting_ReadConfig(t *testing.T) {
 				// mapstructure.Decode(j, dc)
 				// fmt.Printf("%+v\n", dc)
 			}
-
 		})
 	}
 }

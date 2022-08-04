@@ -32,6 +32,10 @@
 * 协程中的panic需要使用defer和recover进行保护
 
 
-## 2022.08.03
+### 2022.08.03
 1. 全接口测试
 2. 编写 makefile
+
+### 2022.08.04
+1. pre-commit 集成 golangci-lint
+2. 根据 golangci-lint 调整代码

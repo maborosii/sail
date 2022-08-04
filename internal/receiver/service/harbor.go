@@ -24,7 +24,7 @@ func (s *Service) HarborUploadChart(req *model.HarborUploadRequest) error {
 			zap.String("request type", req.Type))
 		return err
 	}
-	if msgType != model.UPLOAD_CHART {
+	if msgType != model.UPLOADCHART {
 		global.Logger.Error("upload request's type is not adaption",
 			zap.Error(errcode.RequestTypeNotSupport),
 			zap.String("request type", req.Type))
@@ -38,7 +38,7 @@ func (s *Service) HarborUploadChart(req *model.HarborUploadRequest) error {
 	}
 	got, err := hrc.Rend(req, hrc.Template)
 	if err != nil {
-		global.Logger.Error("rend upload_chart message occured err", zap.Error(err))
+		global.Logger.Error("rend upload_chart message occurred err", zap.Error(err))
 		return err
 	}
 
@@ -63,7 +63,7 @@ func (s *Service) HarborReplication(req *model.HarborReplicationRequest) error {
 			zap.String("request type", req.Type))
 		return err
 	}
-	if (msgType != model.UPLOAD_CHART) && (msgType != model.REPLICATION) {
+	if (msgType != model.UPLOADCHART) && (msgType != model.REPLICATION) {
 		global.Logger.Error("replication request's type is not adaption",
 			zap.Error(errcode.RequestTypeNotSupport),
 			zap.String("request type", req.Type))
@@ -91,7 +91,7 @@ func (s *Service) HarborReplication(req *model.HarborReplicationRequest) error {
 	got, err := hrc.Rend(req, hrc.Template)
 
 	if err != nil {
-		global.Logger.Error("rend replication message occured err", zap.Error(err))
+		global.Logger.Error("rend replication message occurred err", zap.Error(err))
 		return err
 	}
 

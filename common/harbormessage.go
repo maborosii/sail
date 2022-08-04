@@ -13,8 +13,8 @@ func (h *HarborMessage) InitStatus() {
 // get harbor message type
 func (h *HarborMessage) GetStatus() MessageStatus {
 	// if harbor message status is not set
-	if h.Status == NOT_SET {
-		return NOT_SET
+	if h.Status == NOTSET {
+		return NOTSET
 	}
 	return h.Status
 }

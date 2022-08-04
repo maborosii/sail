@@ -7,8 +7,8 @@ content-type: application/json
     "event_data": {
         "source": "清远",
         "app_name": "ale-case-service",
-        "sync_status": "Failed",
+        "sync_status": "succeeded",
         "health_status": "Healthy"
     },
-    "occur_at": 1659514881
+    "occur_at": 1659597202
 }

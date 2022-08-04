@@ -161,10 +161,10 @@ func TestRender(t *testing.T) {
 				},
 			}},
 	}
-	access_token, _ := os.ReadFile("../../../pkg/dingtalk/.access_token")
+	accessToken, _ := os.ReadFile("../../../pkg/dingtalk/.access_token")
 	secret, _ := os.ReadFile("../../../pkg/dingtalk/.secret")
 	d := &dt.DingTalkConfig{
-		AccessToken: string(access_token),
+		AccessToken: string(accessToken),
 		Secret:      string(secret),
 		Domain:      "https://oapi.dingtalk.com/robot/send",
 	}

@@ -13,14 +13,14 @@ var queueSize = 200
 type Job struct {
 	UUID      string
 	DoneChan  chan struct{}
-	HandleJob func() error //具体的处理逻辑
+	HandleJob func() error // 具体的处理逻辑
 }
 
-func NewJob(HandleJob func() error) *Job {
+func NewJob(handleJob func() error) *Job {
 	return &Job{
 		UUID:      uuid.NewString(),
 		DoneChan:  make(chan struct{}, 1),
-		HandleJob: HandleJob,
+		HandleJob: handleJob,
 	}
 }
 
@@ -51,9 +51,9 @@ type JobQueue struct {
 }
 
 // 初始化队列
-func NewJobQueue(cap int) *JobQueue {
+func NewJobQueue(capi int) *JobQueue {
 	return &JobQueue{
-		capacity:   cap,
+		capacity:   capi,
 		queue:      list.New(),
 		noticeChan: make(chan struct{}, 1),
 	}
@@ -91,7 +91,11 @@ func (q *JobQueue) PopJob() *Job {
 func (q *JobQueue) RemoveLeastJob() {
 	if q.queue.Len() != 0 {
 		back := q.queue.Back()
-		abandonJob := back.Value.(*Job)
+		abandonJob, ok := back.Value.(*Job)
+		if !ok {
+			fmt.Println("remove least job asset failed")
+			return
+		}
 		abandonJob.Done()
 		q.queue.Remove(back)
 	}
@@ -111,11 +115,11 @@ func NewWorkerManager(jobQueue *JobQueue) *WorkerManager {
 		jobQueue: jobQueue,
 	}
 }
-func (m *WorkerManager) createWorker() error {
+func (m *WorkerManager) createWorker() {
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
-				fmt.Printf("when execute job occured panic, panic: %s\n", err)
+				fmt.Printf("when execute job occurred panic, panic: %s\n", err)
 			}
 		}()
 		var currentJob *Job
@@ -128,7 +132,6 @@ func (m *WorkerManager) createWorker() error {
 			currentJob.Done()
 		}
 	}()
-	return nil
 }
 
 type FlowControl struct {
@@ -141,10 +144,7 @@ func NewFlowControl() *FlowControl {
 	fmt.Println("init job queue success")
 
 	m := NewWorkerManager(jobQueue)
-	if err := m.createWorker(); err != nil {
-		fmt.Printf("init job queue createworker occured err, err: %s", err)
-		panic(err)
-	}
+	m.createWorker()
 	fmt.Println("init worker success")
 
 	control := &FlowControl{

@@ -19,8 +19,8 @@ func (c *CommonRequest) HarborMsgType() (harborMessageType, error) {
 	switch c.Type {
 	case string(REPLICATION):
 		return REPLICATION, nil
-	case string(UPLOAD_CHART):
-		return UPLOAD_CHART, nil
+	case string(UPLOADCHART):
+		return UPLOADCHART, nil
 	default:
 		return "", errcode.RequestTypeNotSupport
 	}
@@ -108,7 +108,8 @@ func (h *HarborReplicationRequest) GetResourceType() string {
 }
 
 func (h *HarborReplicationRequest) GetResourceName() string {
-	var successTags []string
+	// var successTags []string
+	successTags := make([]string, 0, 5)
 	for _, tags := range h.EventData.Replication.SuccessfulArtifact {
 		successTags = append(successTags, tags.NameTag)
 	}

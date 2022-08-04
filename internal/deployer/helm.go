@@ -46,7 +46,6 @@ func (h *HelmCfg) SetCfg(ns string) {
 
 func (h *HelmCfg) SetInstallClient() {
 	h.InstallCli = action.NewInstall(h.cfg)
-
 }
 func (h *HelmCfg) SetUninstallClient() {
 	h.UninstallCli = action.NewUninstall(h.cfg)
@@ -75,7 +74,6 @@ func (dh *DeployerByHelm) Install(ctx context.Context, b cm.InMessage) error {
 	}
 	global.Logger.Info("app install successful", zap.String("app", release.Name))
 	return nil
-
 }
 
 func (dh *DeployerByHelm) Uninstall(b cm.InMessage) error {

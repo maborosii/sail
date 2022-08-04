@@ -46,7 +46,7 @@ func (a ArgoCD) NotifyArgocdSyncStatus(c *gin.Context) {
 
 	srv := service.NewService(c.Request.Context())
 	if err = srv.ArgocdNotify(&req); err != nil {
-		global.Logger.Error("error occured", zap.Error(err))
+		global.Logger.Error("error occurred", zap.Error(err))
 		response.ToErrorResponse(err.(*errcode.Error))
 		return
 	}

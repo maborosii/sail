@@ -29,7 +29,7 @@ func TestDingTalkPusher_Push(t *testing.T) {
 		{
 			name: "dingtalk message type is markdown",
 			args: args{
-				NewDingTalkMessage(WithDingTalkMessageType(MSG_TYPE_MARKDOWN), WithDingTalkMessageContentOfMarkDown(struct {
+				NewDingTalkMessage(WithDingTalkMessageType(MsgTypeMarkdown), WithDingTalkMessageContentOfMarkDown(struct {
 					Title string "json:\"title\""
 					Text  string "json:\"text\""
 				}{
@@ -39,10 +39,10 @@ func TestDingTalkPusher_Push(t *testing.T) {
 			wantErr: false,
 		},
 	}
-	access_token, _ := os.ReadFile(".access_token")
+	accessToken, _ := os.ReadFile(".access_token")
 	secret, _ := os.ReadFile(".secret")
 	d := &DingTalkConfig{
-		AccessToken: string(access_token),
+		AccessToken: string(accessToken),
 		Secret:      string(secret),
 		Domain:      "https://oapi.dingtalk.com/robot/send",
 	}

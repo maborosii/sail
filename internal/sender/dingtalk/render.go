@@ -20,7 +20,7 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 	var expandRequest map[string]interface{}
 	var err error
 
-	switch n.(type) {
+	switch v := n.(type) {
 	case *model.ArgocdNotifyRequest:
 		expandRequest, err = n.Spread("mapstructure", "city", "app_name", "sync_status", "health_status", "occur_at")
 		if err != nil {
@@ -47,7 +47,7 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 		if err != nil {
 			panic(err)
 		}
-		m := dt.NewDingTalkMessage(dt.WithDingTalkMessageType(dt.MSG_TYPE_MARKDOWN), dt.WithDingTalkMessageContentOfMarkDown(struct {
+		m := dt.NewDingTalkMessage(dt.WithDingTalkMessageType(dt.MsgTypeMarkdown), dt.WithDingTalkMessageContentOfMarkDown(struct {
 			Title string "json:\"title\""
 			Text  string "json:\"text\""
 		}{Title: outputStrSlice[0], Text: outputStrSlice[1]}))
@@ -55,7 +55,10 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 		return m, nil
 
 	case *model.HarborReplicationRequest:
-		h := n.(*model.HarborReplicationRequest)
+		h, ok := n.(*model.HarborReplicationRequest)
+		if !ok {
+			global.Logger.Error("render harbor replication request asset failed")
+		}
 		expandRequest, err := n.Spread("mapstructure", "job_status", "resource_type", "dest_domain", "project", "occur_at")
 		if err != nil {
 			global.Logger.Error("spread harbor replication request to map occur error", zap.Error(err))
@@ -87,7 +90,7 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 		if err != nil {
 			panic(err)
 		}
-		m := dt.NewDingTalkMessage(dt.WithDingTalkMessageType(dt.MSG_TYPE_MARKDOWN), dt.WithDingTalkMessageContentOfMarkDown(struct {
+		m := dt.NewDingTalkMessage(dt.WithDingTalkMessageType(dt.MsgTypeMarkdown), dt.WithDingTalkMessageContentOfMarkDown(struct {
 			Title string "json:\"title\""
 			Text  string "json:\"text\""
 		}{Title: outputStrSlice[0], Text: outputStrSlice[1]}))
@@ -120,14 +123,14 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 		if err != nil {
 			panic(err)
 		}
-		m := dt.NewDingTalkMessage(dt.WithDingTalkMessageType(dt.MSG_TYPE_MARKDOWN), dt.WithDingTalkMessageContentOfMarkDown(struct {
+		m := dt.NewDingTalkMessage(dt.WithDingTalkMessageType(dt.MsgTypeMarkdown), dt.WithDingTalkMessageContentOfMarkDown(struct {
 			Title string "json:\"title\""
 			Text  string "json:\"text\""
 		}{Title: outputStrSlice[0], Text: outputStrSlice[1]}))
 		// fmt.Printf("%+v", *m)
 		return m, nil
 	default:
-		global.Logger.Error("template render occur err, cannot found request type", zap.Error(errcode.RequestTypeNotSupport))
+		global.Logger.Error("template render occur err, cannot found request type", zap.Any("req_type", v), zap.Error(errcode.RequestTypeNotSupport))
 		return nil, errcode.RequestTypeNotSupport
 	}
 	// return &dt.DingTalkMessage{}, nil
@@ -135,7 +138,8 @@ func Render(n cm.InputMessage, omt cm.OutMessageTemplate) (cm.OutMessage, error)
 
 func rendSlice(templateStrSlice []string, input interface{}) ([]string, error) {
 	var buf bytes.Buffer
-	var output []string
+	output := make([]string, 0, 3)
+
 	for _, str := range templateStrSlice {
 		tmpl, err := template.New("-").Parse(str)
 		if err != nil {
