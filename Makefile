@@ -18,8 +18,9 @@ cover:
 	@go tool cover -html=xx.out
 run:
 	./"${BIN_FILE}"
+# 增加超时时间, 在 github action 中载入所有检查模块比较慢, 本地是因为安装了这些模块
 lint:
-	golangci-lint run -c .golangci.yaml -v 
+	golangci-lint run -c .golangci.yaml -v --timeout 3m0s
 docker:
 	@docker build -t leo/hello:latest .
 help:
