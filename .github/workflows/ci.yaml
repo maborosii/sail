@@ -24,8 +24,8 @@ jobs:
         run: |
           go mod tidy
           git diff --exit-code go.mod
-      - name: Install golangci-lint
-        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.47.3
+      # - name: Install golangci-lint
+      #   run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.47.3
       - name: Lint
         run: make lint
       - name: Test
