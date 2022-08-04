@@ -9,10 +9,10 @@ clean:
 	@go clean
 	rm --force "xx.out"
 test:
-	@go test
+	@go test ./...
 check:
-	@go fmt ./
-	@go vet ./
+	@go fmt ./...
+	@go vet ./...
 cover:
 	@go test -coverprofile xx.out
 	@go tool cover -html=xx.out
