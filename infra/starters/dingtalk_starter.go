@@ -18,7 +18,6 @@ type DingTalkStarter struct {
 func (d *DingTalkStarter) Setup(conf *setting.Config) {
 	d.setupPusher(conf)
 	d.setupTemplate(conf)
-
 }
 
 func (d *DingTalkStarter) setupPusher(conf *setting.Config) {

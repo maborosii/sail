@@ -10,7 +10,7 @@
 	// 注册pusher
 	sd.PusherList.RegisterPusher(global.PusherOfDingtalk)
 ```
-更改后，还是发生了 panic，**但该panic没有使程序崩溃**，仍然是空指针异常。这次是 CommitJob 函数执行时报出的异常，由于有了前一次的经验，再次怀疑时 FlowController 没有初始化，结果也确实如此。
+更改后，还是发生了 panic，**但该 panic 没有使程序崩溃**，仍然是空指针异常。这次是 CommitJob 函数执行时报出的异常，由于有了前一次的经验，再次怀疑时 FlowController 没有初始化，结果也确实如此。
 ***那么奇怪的问题就来了，当注册启动器的初始化顺序如下时，FlowController 无法被初始化***
 
 ```go
@@ -30,3 +30,12 @@
 也就说执行 push message 操作的时候，gin的主协程无法捕获这些panic，导致程序崩溃。
 * 主程中的panic本身是会被gin拦截的
 * 协程中的panic需要使用defer和recover进行保护
+
+
+### 2022.08.03
+1. 全接口测试
+2. 编写 makefile
+
+### 2022.08.04
+1. pre-commit 集成 golangci-lint
+2. 根据 golangci-lint 调整代码

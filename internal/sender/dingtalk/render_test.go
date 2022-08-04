@@ -24,12 +24,12 @@ func TestRender(t *testing.T) {
 			name: "test argocd sync",
 			args: args{
 				n: &model.ArgocdNotifyRequest{
-					&model.CommonRequest{
+					CommonRequest: &model.CommonRequest{
 						Type:     "argocd",
 						Operator: "default",
 						OccurAt:  1655959720,
 					},
-					model.ArgocdEventData{
+					EventData: model.ArgocdEventData{
 						Source:       "清远",
 						AppName:      "ale-case-service",
 						SyncStatus:   "Succeed",
@@ -46,12 +46,12 @@ func TestRender(t *testing.T) {
 			name: "test harbor replication image",
 			args: args{
 				n: &model.HarborReplicationRequest{
-					&model.CommonRequest{
+					CommonRequest: &model.CommonRequest{
 						Type:     "REPLICATION",
 						Operator: "admin",
 						OccurAt:  1655959720,
 					},
-					model.ReplicationEventData{
+					EventData: model.ReplicationEventData{
 						Replication: model.Replication{
 							HarborHostname:     "harbor.domain.com",
 							JobStatus:          "Success",
@@ -90,12 +90,12 @@ func TestRender(t *testing.T) {
 			name: "test harbor chart image",
 			args: args{
 				n: &model.HarborReplicationRequest{
-					&model.CommonRequest{
+					CommonRequest: &model.CommonRequest{
 						Type:     "REPLICATION",
 						Operator: "admin",
 						OccurAt:  1655959720,
 					},
-					model.ReplicationEventData{
+					EventData: model.ReplicationEventData{
 						Replication: model.Replication{
 							HarborHostname:     "harbor.domain.com",
 							JobStatus:          "Failed",
@@ -135,12 +135,12 @@ func TestRender(t *testing.T) {
 			name: "test harbor upload chart",
 			args: args{
 				n: &model.HarborUploadRequest{
-					&model.CommonRequest{
+					CommonRequest: &model.CommonRequest{
 						Type:     "UPLOAD_CHART",
 						Operator: "admin",
 						OccurAt:  1655959720,
 					},
-					model.UploadEventData{
+					EventData: model.UploadEventData{
 						Repository: model.Repository{
 							Name:         "ale-case-service",
 							Namespace:    "chart-qy",
@@ -161,10 +161,10 @@ func TestRender(t *testing.T) {
 				},
 			}},
 	}
-	access_token, _ := os.ReadFile("../../../pkg/dingtalk/.access_token")
+	accessToken, _ := os.ReadFile("../../../pkg/dingtalk/.access_token")
 	secret, _ := os.ReadFile("../../../pkg/dingtalk/.secret")
 	d := &dt.DingTalkConfig{
-		AccessToken: string(access_token),
+		AccessToken: string(accessToken),
 		Secret:      string(secret),
 		Domain:      "https://oapi.dingtalk.com/robot/send",
 	}
@@ -173,7 +173,9 @@ func TestRender(t *testing.T) {
 			// got, err := Render(tt.args.n, tt.args.templateStr)
 			m, _ := Render(tt.args.n, tt.args.templateStr)
 			fmt.Printf("%+v\n", m)
-			sender.PushMessage(dt.NewDingTalkPusher(d), m)
+			if err := sender.PushMessage(dt.NewDingTalkPusher(d), m); err != nil {
+				fmt.Println(err)
+			}
 
 			// if (err != nil) != tt.wantErr {
 			// t.Errorf("Render() error = %v, wantErr %v", err, tt.wantErr)

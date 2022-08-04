@@ -11,22 +11,16 @@ import (
 )
 
 func main() {
-	// flowControl := q.NewFlowControl()
-	// myHandler := MyHandler{
-	// 	flowControl: flowControl,
-	// }
-	// http.Handle("/", &myHandler)
-
-	// http.ListenAndServe(":8080", nil)
 	configPath := global.ConfigPath
 	conf, err := setting.NewSetting(configPath)
 	if err != nil {
-		panic(fmt.Sprintf("get config from %s, occur err; %s", configPath, err))
+		panic(fmt.Sprintf("get config from %s, occurred err; %s", configPath, err))
 	}
 	confStruct := &setting.Config{}
-	conf.ReadConfig(confStruct)
+	if err = conf.ReadConfig(confStruct); err != nil {
+		panic(err)
+	}
 	app := infra.NewBootApplication(confStruct)
-	// fmt.Printf("%+v", *global.PusherOfDingtalk)
 	app.Run()
 	// select {}
 }
@@ -36,7 +30,7 @@ func main() {
 // }
 
 // func (h *MyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("recieve http request")
+// 	fmt.Println("receieve http request")
 // 	job := &q.Job{
 // 		UUID:     uuid.NewString(),
 // 		DoneChan: make(chan struct{}, 1),

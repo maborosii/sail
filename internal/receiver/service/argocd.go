@@ -27,7 +27,7 @@ func (s *Service) ArgocdNotify(req *model.ArgocdNotifyRequest) error {
 	}
 	got, err := hrc.Rend(req, hrc.Template)
 	if err != nil {
-		global.Logger.Error("rend argocd message occured err", zap.Error(err))
+		global.Logger.Error("rend argocd message occurred err", zap.Error(err))
 		return err
 	}
 

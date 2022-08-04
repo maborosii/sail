@@ -1,7 +1,7 @@
 package common
 
 const (
-	NOT_SET MessageStatus = iota
+	NOTSET MessageStatus = iota
 	RECEIVED
 	DEPLOYED
 )

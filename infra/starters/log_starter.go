@@ -13,5 +13,7 @@ type LogStarter struct {
 
 func (l *LogStarter) Setup(conf *setting.Config) {
 	fmt.Println("init logger ..")
-	logger.InitLogger(conf.LogConfig)
+	if err := logger.InitLogger(conf.LogConfig); err != nil {
+		panic(err)
+	}
 }

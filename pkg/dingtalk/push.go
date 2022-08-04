@@ -22,31 +22,31 @@ type DingTalkConfig struct {
 
 // dingtalk 消息推送器
 type DingTalkPusher struct {
-	access_token string
-	secret       string
-	domain       string
+	accessToken string
+	secret      string
+	domain      string
 
 	Client *http.Client
 }
 
 func NewDingTalkPusher(dtc *DingTalkConfig) *DingTalkPusher {
 	return &DingTalkPusher{
-		access_token: dtc.AccessToken,
-		secret:       dtc.Secret,
-		domain:       dtc.Domain,
+		accessToken: dtc.AccessToken,
+		secret:      dtc.Secret,
+		domain:      dtc.Domain,
 	}
 }
 
 // 对 url 加签并拼接
-func (p *DingTalkPusher) completeUrl(mainDomain string) (*url.URL, error) {
+func (p *DingTalkPusher) completeURL(mainDomain string) (*url.URL, error) {
 	sign, timestamp := toSign(p.secret)
 
 	u, err := url.Parse(mainDomain)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	v := url.Values{}
-	v.Set("access_token", p.access_token)
+	v.Set("access_token", p.accessToken)
 	if sign != "" {
 		v.Set("sign", sign)
 		v.Set("timestamp", timestamp)
@@ -57,14 +57,17 @@ func (p *DingTalkPusher) completeUrl(mainDomain string) (*url.URL, error) {
 
 // 消息推送
 func (p *DingTalkPusher) Push(m cm.OutMessage) error {
-
 	// asset
-	mm := m.(*DingTalkMessage)
+	mm, ok := m.(*DingTalkMessage)
+	if !ok {
+		return fmt.Errorf("dingtalk message asset failed")
+	}
+
 	if p.Client == nil {
 		p.Client = http.DefaultClient
 	}
 
-	u, err := p.completeUrl(p.domain)
+	u, err := p.completeURL(p.domain)
 	if err != nil {
 		panic(err)
 	}
@@ -81,8 +84,11 @@ func (p *DingTalkPusher) Push(m cm.OutMessage) error {
 	defer resp.Body.Close()
 
 	dingError := &dingTalkError{}
-	json.NewDecoder(resp.Body).Decode(dingError)
-	if dingError.code != 0 {
+
+	if err = json.NewDecoder(resp.Body).Decode(dingError); err != nil {
+		return err
+	}
+	if dingError.Code != 0 {
 		return dingError
 	}
 	return nil
@@ -94,20 +100,20 @@ func (p *DingTalkPusher) Type() string {
 
 // dingtalk 推送返回消息体
 type dingTalkError struct {
-	code    int    `json:"errcode"`
-	message string `json:"errmsg"`
+	Code    int    `json:"errcode"`
+	Message string `json:"errmsg"`
 }
 
 func (d *dingTalkError) Error() string {
-	return fmt.Sprintf("DingTalk API error code:%d msg:%q", d.code, d.message)
+	return fmt.Sprintf("DingTalk API error code:%d msg:%q", d.Code, d.Message)
 }
 
 // 定义 dingtalk post 消息体
 type DingTalkPostMessageType string
 
 const (
-	MSG_TYPE_TEXT     DingTalkPostMessageType = "text"
-	MSG_TYPE_MARKDOWN DingTalkPostMessageType = "markdown"
+	MsgTypeText     DingTalkPostMessageType = "text"
+	MsgTypeMarkdown DingTalkPostMessageType = "markdown"
 )
 
 type DingTalkMessage struct {
