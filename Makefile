@@ -19,7 +19,7 @@ cover:
 run:
 	./"${BIN_FILE}"
 lint:
-	golangci-lint run -c .golangci.yaml
+	golangci-lint run -c .golangci.yaml -v --timeout=3m0s
 docker:
 	@docker build -t leo/hello:latest .
 help:
