@@ -21,7 +21,7 @@ run:
 lint:
 	golangci-lint run -c .golangci.yaml -v --timeout=3m0s
 docker:
-	@docker build -t leo/hello:latest .
+	@docker build -t maborosii/sail:latest .
 help:
 	@echo "make 格式化go代码 并编译生成二进制文件"
 	@echo "make build 编译go代码生成二进制文件"
