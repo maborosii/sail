@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"sail/cmd"
 	"sail/global"
 	"sail/infra"
 	"sail/infra/starters"
@@ -11,10 +13,16 @@ import (
 )
 
 func main() {
-	configPath := global.ConfigPath
-	conf, err := setting.NewSetting(configPath)
+	// 获取配置文件
+	var err error
+	err = cmd.Execute()
 	if err != nil {
-		panic(fmt.Sprintf("get config from %s, occurred err; %s", configPath, err))
+		log.Fatalf("cmd.Execute err: %v", err)
+	}
+
+	conf, err := setting.NewSetting(global.ConfigPath)
+	if err != nil {
+		panic(fmt.Sprintf("get config from %s, occurred err; %s", global.ConfigPath, err))
 	}
 	confStruct := &setting.Config{}
 	if err = conf.ReadConfig(confStruct); err != nil {
