@@ -2,10 +2,11 @@ package queue
 
 import (
 	"container/list"
-	"fmt"
 	"sync"
 
 	"github.com/google/uuid"
+	// "github.com/siddontang/go/log"
+	"log"
 )
 
 var queueSize = 200
@@ -27,7 +28,8 @@ func NewJob(handleJob func() error) *Job {
 // 消费者从队列中取出该job时 执行具体的处理逻辑
 func (job *Job) Execute() error {
 	// fmt.Println(time.Now())
-	fmt.Println(job.UUID, "job start to execute ")
+	// fmt.Println(job.UUID, "job start to execute ")
+	log.Println("job-uuid: ", job.UUID, "job start to execute ")
 	return job.HandleJob()
 }
 
@@ -93,7 +95,8 @@ func (q *JobQueue) RemoveLeastJob() {
 		back := q.queue.Back()
 		abandonJob, ok := back.Value.(*Job)
 		if !ok {
-			fmt.Println("remove least job asset failed")
+			// fmt.Println("remove least job asset failed")
+			log.Println("remove least job asset failed")
 			return
 		}
 		abandonJob.Done()
@@ -119,7 +122,8 @@ func (m *WorkerManager) createWorker() {
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
-				fmt.Printf("when execute job occurred panic, panic: %s\n", err)
+				// fmt.Printf("when execute job occurred panic, panic: %s\n", err)
+				log.Printf("when execute job occurred panic, panic: %s\n", err)
 			}
 		}()
 		var currentJob *Job
@@ -141,17 +145,20 @@ type FlowControl struct {
 
 func NewFlowControl() *FlowControl {
 	jobQueue := NewJobQueue(queueSize)
-	fmt.Println("init job queue success")
+	// fmt.Println("init job queue success")
+	log.Println("init job queue success")
 
 	m := NewWorkerManager(jobQueue)
 	m.createWorker()
-	fmt.Println("init worker success")
+	// fmt.Println("init worker success")
+	log.Println("init worker success")
 
 	control := &FlowControl{
 		jobQueue: jobQueue,
 		wm:       m,
 	}
-	fmt.Println("init flowcontrol success")
+	// fmt.Println("init flowcontrol success")
+	log.Println("init flowcontrol success")
 	return control
 }
 

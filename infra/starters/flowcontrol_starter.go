@@ -1,7 +1,7 @@
 package starters
 
 import (
-	"fmt"
+	"log"
 	"sail/global"
 	"sail/infra"
 	q "sail/pkg/queue"
@@ -13,6 +13,7 @@ type FlowControlStarter struct {
 }
 
 func (f *FlowControlStarter) Setup(conf *setting.Config) {
-	fmt.Println("init Flow control ..")
+	log.Println("init Flow control ..")
+	// fmt.Println("init Flow control ..")
 	global.FlowControl = q.NewFlowControl()
 }

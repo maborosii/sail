@@ -57,6 +57,8 @@ func (p *DingTalkPusher) completeURL(mainDomain string) (*url.URL, error) {
 
 // 消息推送
 func (p *DingTalkPusher) Push(m cm.OutMessage) error {
+	// sleep 5 secs
+	time.Sleep(5 * time.Second)
 	// asset
 	mm, ok := m.(*DingTalkMessage)
 	if !ok {
