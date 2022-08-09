@@ -20,7 +20,7 @@ on:
 
 env:
   GO_VERSION: 1.17
-  GOLANGCI_LINT_CACHE: /go/.cache/golangci-lint
+  GOLANGCI_LINT_CACHE: /home/runner/.cache/golangci-lint
   # GOCACHE: /go/.cache/go-build
   # GOMODCACHE: /go/pkg/mod
   # GOPATH: /go
