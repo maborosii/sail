@@ -40,7 +40,7 @@ jobs:
           echo "::set-output name=go-golangci-lint::/usr/local/bin/golangci-lint"
       - name: Checkout Code
         uses: actions/checkout@v3
-      - if: steps.cache-go-mod.outputs.cache-hit == 'false' 
+      - if: ${{ steps.cache-go-mod.outputs.cache-hit == 'false' }}
         name: Go MOD INIT
         run: |
           go env -w GO111MODULE="on"
@@ -55,7 +55,7 @@ jobs:
           path: ${{ steps.go-cache-paths.outputs.go-mod }}
           key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.mod') }}
 
-      - if: steps.cache-golangci-lint-binary.outputs.cache-hit == 'false' 
+      - if: ${{ steps.cache-golangci-lint-binary.outputs.cache-hit == 'false' }}
         name: Install golangci-lint
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.47.3
         # run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.47.3
