@@ -34,7 +34,7 @@ jobs:
         run: |
           test_package=$(go list ./... | grep -vi dingtalk | grep -vi setting)
           go test ${test_package}
-      - name: Docker Bild
-        run: make docker
+      # - name: Docker Bild
+      #   run: make docker
           
         
