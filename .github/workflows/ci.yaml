@@ -49,11 +49,17 @@ jobs:
       - name: Cache go modules
         id: cache-go-mod
         uses: actions/cache@v3
-        env:
-          cache-name: cache-go-modules
+        # env:
+        #   cache-name: cache-go-modules
+        # with:
+        #   path: ${{ steps.go-cache-paths.outputs.go-mod }}
+        #   key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.mod') }}
         with:
-          path: ${{ steps.go-cache-paths.outputs.go-mod }}
-          key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.mod') }}
+          path: |
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
       - name: Install golangci-lint
         if: steps.cache-golangci-lint-binary.outputs.cache-hit != 'true' 
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.47.3
