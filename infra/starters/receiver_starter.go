@@ -1,7 +1,7 @@
 package starters
 
 import (
-	"fmt"
+	"log"
 	"sail/infra"
 	"sail/internal/receiver"
 	"sail/pkg/setting"
@@ -12,7 +12,8 @@ type RecvStarter struct {
 }
 
 func (r *RecvStarter) Setup(conf *setting.Config) {
-	fmt.Println("init receiver ..")
+	log.Println("init receiver ..")
+	// fmt.Println("init receiver ..")
 	recv := conf.Receiver
 	receiver.Receiver(recv.Port)
 }

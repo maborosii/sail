@@ -1,7 +1,7 @@
 package starters
 
 import (
-	"fmt"
+	"log"
 	"sail/infra"
 	"sail/pkg/logger"
 	"sail/pkg/setting"
@@ -12,7 +12,8 @@ type LogStarter struct {
 }
 
 func (l *LogStarter) Setup(conf *setting.Config) {
-	fmt.Println("init logger ..")
+	log.Println("init logger ..")
+	// fmt.Println("init logger ..")
 	if err := logger.InitLogger(conf.LogConfig); err != nil {
 		panic(err)
 	}

@@ -2,6 +2,7 @@ package starters
 
 import (
 	"fmt"
+	"log"
 	"sail/global"
 	"sail/infra"
 	sd "sail/internal/sender"
@@ -21,7 +22,8 @@ func (d *DingTalkStarter) Setup(conf *setting.Config) {
 }
 
 func (d *DingTalkStarter) setupPusher(conf *setting.Config) {
-	fmt.Println("init dingtalk pusher...")
+	// fmt.Println("init dingtalk pusher...")
+	log.Println("init dingtalk pusher...")
 	dtc := &dt.DingTalkConfig{}
 	for k, v := range conf.Senders {
 		if k == "dingtalk" {
