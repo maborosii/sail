@@ -67,7 +67,7 @@ jobs:
           path: ${{ steps.go-cache-paths.outputs.go-golangci-lint }}
           key: ${{ runner.os }}-golangci-lint-binary-v1.47.3
       - name: Lint
-        if: steps.cache-golangci-lint-mod.outputs.cache-hit == 'true'
+        if: steps.cache-golangci-lint-mod.outputs.cache-hit != 'true'
         run: make lint
       - name: Cache golangci-lint modules
         id: cache-golangci-lint-mod
