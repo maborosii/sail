@@ -1,0 +1,9 @@
+{{- if .Values.configurationFiles }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Release.Name}}-configmap
+data:
+  sailConfig: |-
+{{ tpl (.Files.Get "myapp/appconfig/config.toml") . | indent 4 }}
+{{- end -}}

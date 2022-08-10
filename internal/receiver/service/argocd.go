@@ -36,8 +36,11 @@ func (s *Service) ArgocdNotify(req *model.ArgocdNotifyRequest) error {
 		sd.PusherList.Exec(got)
 		return nil
 	})
-	global.FlowControl.CommitJob(j)
-	global.Logger.Debug("commit argocd job to job queue success", zap.String("job_uuid", j.UUID))
-	j.WaitDone()
+	go func(j *q.Job) {
+		global.FlowControl.CommitJob(j)
+		global.Logger.Debug("commit argocd job to job queue success", zap.String("job_uuid", j.UUID))
+		j.WaitDone()
+		global.Logger.Debug("job has completed", zap.String("job_uuid", j.UUID))
+	}(j)
 	return nil
 }

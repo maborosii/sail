@@ -40,7 +40,8 @@ func (h Harbor) NotifyHarborReplication(c *gin.Context) {
 		zap.String("type", req.Type),
 		zap.String("artifact_type", req.EventData.Replication.ArtifactType),
 		zap.String("dest_resource", req.EventData.Replication.DestResource.RegistryName),
-		zap.String("tags", req.EventData.Replication.SuccessfulArtifact[0].NameTag))
+		// zap.String("tags", req.EventData.Replication.SuccessfulArtifact[0].NameTag))
+		zap.String("tags", req.GetResourceName()))
 
 	srv := service.NewService(c.Request.Context())
 	if err = srv.HarborReplication(&req); err != nil {

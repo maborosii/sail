@@ -10,5 +10,5 @@ content-type: application/json
         "sync_status": "succeeded",
         "health_status": "Healthy"
     },
-    "occur_at": 1659597202
+    "occur_at": 1660088210
 }

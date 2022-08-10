@@ -29,7 +29,7 @@ func NewJob(handleJob func() error) *Job {
 func (job *Job) Execute() error {
 	// fmt.Println(time.Now())
 	// fmt.Println(job.UUID, "job start to execute ")
-	log.Println("job-uuid: ", job.UUID, "job start to execute ")
+	// log.Println("job-uuid: ", job.UUID, "job start to execute ")
 	return job.HandleJob()
 }
 
@@ -57,7 +57,7 @@ func NewJobQueue(capi int) *JobQueue {
 	return &JobQueue{
 		capacity:   capi,
 		queue:      list.New(),
-		noticeChan: make(chan struct{}, 1),
+		noticeChan: make(chan struct{}, 200),
 	}
 }
 
@@ -66,12 +66,14 @@ func (q *JobQueue) PushJob(job *Job) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 	q.size++
+	// fmt.Printf("cap:%d, size:%d\n", q.capacity, q.size)
 	if q.size > q.capacity {
 		q.RemoveLeastJob()
 	}
 
 	q.queue.PushBack(job)
 	q.noticeChan <- struct{}{}
+	// fmt.Println("通知通道：入队", job.UUID)
 }
 
 // 工作单元出队
@@ -129,6 +131,7 @@ func (m *WorkerManager) createWorker() {
 		var currentJob *Job
 		for range m.jobQueue.waitJob() {
 			currentJob = m.jobQueue.PopJob()
+			// fmt.Println("弹出任务", currentJob.UUID)
 			if err := currentJob.Execute(); err != nil {
 				currentJob.Done()
 				continue
