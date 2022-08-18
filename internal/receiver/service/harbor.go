@@ -47,9 +47,13 @@ func (s *Service) HarborUploadChart(req *model.HarborUploadRequest) error {
 		sd.PusherList.Exec(got)
 		return nil
 	})
-	global.FlowControl.CommitJob(j)
-	global.Logger.Debug("commit replication job to job queue success", zap.String("job_uuid", j.UUID))
-	j.WaitDone()
+
+	go func(j *q.Job) {
+		global.FlowControl.CommitJob(j)
+		global.Logger.Debug("commit replication job to job queue success", zap.String("job_uuid", j.UUID))
+		j.WaitDone()
+		global.Logger.Debug("job has completed", zap.String("job_uuid", j.UUID))
+	}(j)
 	// sd.PusherList.Exec(got)
 	// global.PusherOfDingtalk.Push(got)
 	return nil
@@ -100,8 +104,11 @@ func (s *Service) HarborReplication(req *model.HarborReplicationRequest) error {
 		sd.PusherList.Exec(got)
 		return nil
 	})
-	global.FlowControl.CommitJob(j)
-	global.Logger.Debug("commit replication job to job queue success", zap.String("job_uuid", j.UUID))
-	j.WaitDone()
+	go func(j *q.Job) {
+		global.FlowControl.CommitJob(j)
+		global.Logger.Debug("commit replication job to job queue success", zap.String("job_uuid", j.UUID))
+		j.WaitDone()
+		global.Logger.Debug("job has completed", zap.String("job_uuid", j.UUID))
+	}(j)
 	return nil
 }

@@ -25,8 +25,8 @@ COPY --from=build /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 # 在build阶段复制可执行的go二进制文件app
 COPY --from=build /go/release/sail /
 # 在build阶段复制配置文件
-COPY --from=build /go/release/configs ./config
+COPY --from=build /go/release/configs ./configs
 EXPOSE 5004
 
 # 启动服务
-CMD ["/sail","config","-c","config"]
+CMD ["/sail","config","-c","configs"]

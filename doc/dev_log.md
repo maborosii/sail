@@ -39,3 +39,8 @@
 ### 2022.08.04
 1. pre-commit 集成 golangci-lint
 2. 根据 golangci-lint 调整代码
+
+### 2022.08.10
+由于在请求处理最后阶段将任务 push 到队列中，最后返回操作是个同步阻塞操作，遂修改为异步处理。之前也想过这么去做，可是测试发现，当主 goroutine 完成后，会把子 goroutine 的任务停掉，遂放弃；但今天又进行了一番测试，发现是正常的，便又了如下疑问：***主 goroutine 的生命周期是否对子 goroutine 的生命周期产生印象？父子 goroutine 呢？***
+
+之前都是在 main 函数中起 goroutine，发现 main 函数的执行周期直接影响其子协程的生命周期，便认为此是 golang 中父子 goroutine 的关系，但测试表明，***除了受 main 函数所在 goroutine 的生命周期影响外，其他 goroutine 的生命周期都是独立的，不同于linux里的进程依赖，golang里，协程都是互相独立的，没有依赖（父子）关系。main函数本身也运行在一个goroutine中，main是所有协程的被依赖者，这里是个特例。***
