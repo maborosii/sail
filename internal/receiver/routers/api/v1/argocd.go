@@ -31,18 +31,18 @@ func (a ArgoCD) NotifyArgocdSyncStatus(c *gin.Context) {
 		response.ToErrorResponse(errcode.BadRequest)
 		return
 	}
-	// 检查消息体是否过期
-	if _, err := expire.IsExpired(req.OccurAt, 5*time.Minute); err != nil {
-		global.Logger.Error("request timestamp is expired", zap.Error(err))
-		response.ToErrorResponse(errcode.RequestExpired)
-		return
-	}
 
 	global.Logger.Debug("request info",
 		zap.String("type", req.Type),
 		zap.String("appName", req.EventData.AppName),
 		zap.String("sync_status", req.EventData.SyncStatus),
 		zap.String("health_status", req.EventData.HealthStatus))
+	// 检查消息体是否过期
+	if _, err := expire.IsExpired(req.OccurAt, 5*time.Minute); err != nil {
+		global.Logger.Error("request timestamp is expired", zap.Error(err))
+		response.ToErrorResponse(errcode.RequestExpired)
+		return
+	}
 
 	srv := service.NewService(c.Request.Context())
 	if err = srv.ArgocdNotify(&req); err != nil {
