@@ -56,7 +56,11 @@ func main() {
 // }
 func init() {
 	// 配置初始化
-	infra.Register(&starters.LogStarter{}, &starters.FlowControlStarter{}, &starters.DingTalkStarter{})
+	infra.Register(&starters.LogStarter{}, &starters.FlowControlStarter{})
+
+	// 注册推送渠道
+	// infra.Register(&starters.DingTalkStarter{})
+	infra.Register(&starters.QYWeChatStarter{})
 
 	// 启动服务
 	infra.Register(&starters.RecvStarter{})

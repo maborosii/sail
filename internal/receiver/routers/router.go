@@ -22,6 +22,7 @@ func NewRouter() *gin.Engine {
 	argocd := v1.NewArgoCD()
 	{
 		apiv1.POST("/argocd/notify", argocd.NotifyArgocdSyncStatus)
+		apiv1.POST("/argocd/notify/wechat", argocd.NotifyArgocdSyncStatus_WeChat)
 	}
 
 	return r
