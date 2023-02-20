@@ -54,7 +54,7 @@ func (p *PushList) Exec(om cm.OutMessage) {
 			defer w.Done()
 			err := pp.Push(om)
 			if err != nil {
-				global.Logger.Error("it occurs error when push messgae", zap.Error(err))
+				global.Logger.Error("it occurs error when push message", zap.Error(err))
 			}
 		}(om, pp)
 	}

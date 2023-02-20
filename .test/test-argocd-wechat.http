@@ -1,4 +1,4 @@
-POST http://localhost:5004/api/v1/argocd/notify HTTP/1.1
+POST http://localhost:5004/api/v1/argocd/notify/wechat HTTP/1.1
 content-type: application/json
 
 {
@@ -10,5 +10,5 @@ content-type: application/json
         "sync_status": "succeeded",
         "health_status": "Healthy"
     },
-    "occur_at": 1673244108
+    "occur_at": 1613245807
 }
